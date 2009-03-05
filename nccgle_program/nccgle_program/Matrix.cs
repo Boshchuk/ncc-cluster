@@ -22,14 +22,34 @@ namespace nccgle_program
             this.dimY = dimY;
         }
 
-        //..обьеденить в get set
+
+        public double this[int x, int y]
+        {
+            get
+            {
+                if (((x >= 0) && (y >= 0)) && ((x < dimX) && (y < dimY)))
+                {
+                    return this.body[x, y];
+                }
+                else return -999.999;
+            }
+            set
+            {
+                if (((x >= 0) && (y >= 0)) && ((x < dimX) && (y < dimY)))
+                {
+                    this.body[x, y] = value;
+                }
+            }
+        }
+        #region OLD SetElement & GetElement NotCommented yet
+        //Get and set Proporties
         public void SetElement(int x, int y, double e)
         {//..можно былобы эксепшинами кидаться, и их обрабатывать... гы
             if (((x >= 0) && (y >= 0)) && ((x < dimX) && (y < dimY)))
             {
                 this.body[x, y] = e;
             }
-        }
+        }        
 
         public double GetElement(int x, int y)
         {//именно эксэпшинами и в место мысли был бы быдло код
@@ -39,7 +59,7 @@ namespace nccgle_program
             }
             else return -999.999;
         }
-
+        #endregion
         //..есть предложение заменить па свойства... ладно наследуем класс , сто пудов ... поп позжа
         public int DimX
         {
