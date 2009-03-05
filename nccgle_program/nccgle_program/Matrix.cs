@@ -26,7 +26,10 @@ namespace nccgle_program
                 {
                     return this.body[x, y];
                 }
-                else return -999.999;
+                else
+                {
+                    throw new IndexOutOfRangeException();
+                }
             }
             set
             {

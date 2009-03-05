@@ -107,9 +107,9 @@ namespace nccgle_program
 
                         if (Doc.Find(template) != -1)
                         {
-                            m.SetElement(i, j, 1);
+                            m[i, j] = 1;
                         }
-                        else m.SetElement(i, j, 0);
+                        else m[i, j] = 0;
                     }
                 }
 
@@ -379,7 +379,7 @@ namespace nccgle_program
                         tempmas[r] = 0;
                     }
                     if (KolKlaster > 0) m++;
-                    KolInKlaster.SetElement(i, h, KolKlaster);
+                    KolInKlaster[i, h] = KolKlaster;
          
                     TermDocs += KolKlaster;
                 }
