@@ -54,7 +54,6 @@
     </Compile>
     <Compile Include="JustDoIt.cs" />
     <Compile Include="Matrix.cs" />
-    <Compile Include="NccArray.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMain.resx">

@@ -29,9 +29,9 @@ namespace nccgle_program
                     {
                         for (int g = 0; g < m1x; g++)
                         {
-                            tmp = tmp + (m1.GetElement(g, i) * m2.GetElement(j, g));
+                            tmp = tmp + (m1[g, i] * m2[j, g]);
                         }
-                        m3.SetElement(i, j, tmp);
+                        m3[i, j]= tmp;
                         tmp = 0;
                     }
 
@@ -46,7 +46,7 @@ namespace nccgle_program
             for (int i = 0; i < m.DimX; i++)
                 for (int j = 0; j < m.DimY; j++)
                 {
-                    result.SetElement(j, i, m.GetElement(i, j));
+                    result[j, i] = m[i, j];
                 }
             return result;
         }
@@ -66,7 +66,7 @@ namespace nccgle_program
 
                 for (int j = 0; j < dy; j++)
                 {   
-                    page += "<td align=center>" + Math.Round(m.GetElement(i, j), 4) + "</td>";
+                    page += "<td align=center>" + Math.Round(m[i, j], 4) + "</td>";
                 }
                 page += "</tr>";
             }
@@ -121,14 +121,14 @@ namespace nccgle_program
             {
                 for (int i = 0; i < Constant.DocumentsNumber; i++)
                 {
-                    summa[j] += d.GetElement(i,j);
+                    summa[j] += d[i,j];
                 }
             }
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
                 for (int j = 0; j < Constant.TermsNumber; j++)
                 {
-                    s.SetElement(i,j, d.GetElement(i,j) / summa[j] );
+                    s[i,j]= d[i,j] / summa[j] ;
                 }
             }
         }
@@ -141,7 +141,7 @@ namespace nccgle_program
             {
                 for (int j = 0; j < Constant.TermsNumber; j++)
                 {
-                    summa[i] += d.GetElement(i, j);
+                    summa[i] += d[i, j];
                 }
             }
 
@@ -149,7 +149,7 @@ namespace nccgle_program
             {
                 for (int j = 0; j < Constant.TermsNumber; j++)
                 {
-                    s.SetElement(i, j, d.GetElement(i, j) / summa[i]);
+                    s[i, j]= d[i, j] / summa[i];
                 }
             }
         }
