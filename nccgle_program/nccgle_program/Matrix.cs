@@ -11,10 +11,13 @@ namespace nccgle_program
         private int dimX = 0, dimY = 0;
         private double[,] body;
 
+        /*
+        // Мое предложение убить этот конструктор
         public Matrix()
         {
             throw(new Exception("Нет конструктора гы"));
         }
+         */
         public Matrix(int dimX, int dimY)
         {
             body = new Double[dimX, dimY];
