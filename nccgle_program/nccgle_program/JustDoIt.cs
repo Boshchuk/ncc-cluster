@@ -90,33 +90,43 @@ namespace nccgle_program
             progress.Maximum = Constant.DocumentsNumber;
             progress.Step = 1;
 
-            Slovar.LoadFile(Constant.PathToDictionary);
-            for (int i = 0; i < Constant.DocumentsNumber; i++)
+            try
             {
-                Doc.LoadFile(Constant.PathToDocuments + (i + 1).ToString() + Constant.DocumentsFileExtension);
-                for (int j = 0; j < Constant.TermsNumber; j++)
+
+                Slovar.LoadFile(Constant.PathToDictionary);
+                for (int i = 0; i < Constant.DocumentsNumber; i++)
                 {
-                    string text = Slovar.Lines[j];
-                    int current_position = 0;
 
-                    while (text.Length != 0)
+                    Doc.LoadFile(Constant.PathToDocuments + (i + 1).ToString() + Constant.DocumentsFileExtension);
+                    for (int j = 0; j < Constant.TermsNumber; j++)
                     {
-                        current_position = text.IndexOf("/");
-                        string template = text.Substring(0, current_position);
-                        text = text.Remove(0, current_position + 1);
+                        string text = Slovar.Lines[j];
+                        int current_position = 0;
 
-                        if (Doc.Find(template) != -1)
+                        while (text.Length != 0)
                         {
-                            m[i, j] = 1;
+                            current_position = text.IndexOf("/");
+                            string template = text.Substring(0, current_position);
+                            text = text.Remove(0, current_position + 1);
+
+                            if (Doc.Find(template) != -1)
+                            {
+                                m[i, j] = 1;
+                            }
+                            else m[i, j] = 0;
                         }
-                        else m[i, j] = 0;
                     }
+
+                    progress.PerformStep();
+                    Doc.Clear();
                 }
 
-                progress.PerformStep();
-                Doc.Clear();
+                progress.Value = 0;
             }
-            progress.Value = 0;
+            catch (System.IO.IOException IOEx)
+            {
+                MessageBox.Show(IOEx.Message+" Это так на будующее");
+            }
         }
 
         public static void ForMatrixS(Matrix d, Matrix s)
@@ -396,20 +406,14 @@ namespace nccgle_program
 
             for (int i = 0; i < 26; i++)
             {
-
                 for (int j = 0; j < 6; j++)
                 {
                     NumberOne = KolInKlaster[i, j] * bus[i];
                     NumberTwo = Bus * 0.5 * SrInKlaster[i,0];
                     if (NumberOne > NumberTwo) OneAndZero[i, j]= 1;
                     else OneAndZero[i, j]= 0;
-
                 }
-
-            }
- 
-
-           
+            }           
         }
     }
 }
