@@ -74,7 +74,13 @@ namespace nccgle_program
 
             table.DocumentText = page;
         }
+        //..кстати в  summary можно тэги юзать 
 
+        /// <summary>
+        /// Вызов метода заполнения матрицы D
+        /// (модели множества документов)
+        /// </summary>
+        /// <param name="m"></param>
         public static void ForMatrixD(Matrix m) // заполнение матрицы D (модели множества документов)
         {   // тут был быдлокод
             RichTextBox Slovar = new RichTextBox(); 
@@ -176,12 +182,11 @@ namespace nccgle_program
                 koef_svyazi_obschiy += koef_svyazi_i[i,0];
             }
             //собирательная способность
-
             int[] t = new int[Constant.DocumentsNumber];
             
             //Pi
             //double[] p = new double[Constant.DocumentsNumber];
-            Matrix p = new Matrix(Constant.DocumentsNumber,0);
+            Matrix p = new Matrix(Constant.DocumentsNumber,0); // 
 
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
@@ -197,7 +202,6 @@ namespace nccgle_program
 
             //DeltaS
             double[] bus = new double[Constant.TermsNumber];
-
             //общий коэфициент уникальности
             double Bus = 0;
             //коэфициент связи
@@ -321,14 +325,17 @@ namespace nccgle_program
                 for (int k = 0; k < 6; k++)
                 {
                     if (k == MaxNumber)
-                    { MaxInRow[i, k]= 1; }
+                    { 
+                        MaxInRow[i, k]= 1; 
+                    }
                     else
-                    { MaxInRow[i, k]=0; }
-                    //iRow[cent1[k].ToString()] = MaxInRow.GetElement(i, k);
+                    {
+                        MaxInRow[i, k]=0; 
+                    }                    
                 }
                 //DocsKlasters.Rows.Add(iRow);
             }
-            //dataGridView7.DataSource = DocsKlasters;
+        
             
              
             //////////////////////////////////////////////////////////////////////////////////////
@@ -351,8 +358,6 @@ namespace nccgle_program
 //            Centroid.Columns.Add(iCol);
             for (int i = 0; i < 26; i++)
             {
-
-
                // iRow = Centroid.NewRow();
                 TermDocs = 0;
                 m = 0;
@@ -375,42 +380,35 @@ namespace nccgle_program
                     }
                     if (KolKlaster > 0) m++;
                     KolInKlaster.SetElement(i, h, KolKlaster);
-                   // iRow[cent1[h].ToString()] = KolKlaster;
+         
                     TermDocs += KolKlaster;
                 }
                 SrInKlaster[i,0]= TermDocs / m;
-               // iRow["SR"] = Math.Round(SrInKlaster[i], 3);
-               // Centroid.Rows.Add(iRow);
             }
     
-          //  dataGridView8.DataSource = Centroid;
          
 
           //  G
             Matrix OneAndZero = new Matrix(26, 6);
             double NumberOne;
             double NumberTwo;
-            for (int i = 0; i < 6; i++)
-            {
-                //iCol = new DataColumn(cent1[i].ToString());
-                //OneOrZero.Columns.Add(iCol);
-            }
+            
 
             for (int i = 0; i < 26; i++)
             {
-                //iRow = OneOrZero.NewRow();
+
                 for (int j = 0; j < 6; j++)
                 {
                     NumberOne = KolInKlaster[i, j] * bus[i];
                     NumberTwo = Bus * 0.5 * SrInKlaster[i,0];
                     if (NumberOne > NumberTwo) OneAndZero[i, j]= 1;
                     else OneAndZero[i, j]= 0;
-                   // iRow[cent1[j].ToString()] = OneAndZero.GetElement(i, j0;
+
                 }
-                //OneOrZero.Rows.Add(iRow);
+
             }
  
-           // dataGridView9.DataSource = OneOrZero;
+
            
         }
     }
