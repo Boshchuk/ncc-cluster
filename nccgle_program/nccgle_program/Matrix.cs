@@ -85,7 +85,7 @@ namespace nccgle_program
             for (int i = 0; i < dimX; i++)
                 for (int j = 0; j < dimY; j++)
                 {
-                    SetElement(i, j, 0);
+                    this[i, j] = 0;
                 }
         }
 
@@ -95,17 +95,18 @@ namespace nccgle_program
             for (int i = 0; i < dimX; i++)
                 for (int j = 0; j < dimY; j++)
                 {
-                    SetElement(i, j, randObj.NextDouble());
+                    this[i, j] =  randObj.NextDouble();
                 }
         }
 
         public Matrix(Matrix byWhat)
         {
+         
             for (int i = 0; i < DimX; i++)
             {
                 for (int j = 0; j < DimY; j++)
                 {
-                    SetElement(i, j, GetElement(i, j));   
+                     this[i, j]= byWhat[i, j];   
                 }
             }
         }

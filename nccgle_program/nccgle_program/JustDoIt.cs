@@ -169,11 +169,11 @@ namespace nccgle_program
 
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
-                koef_uniq_i.SetElement( i,0, c.GetElement(i, i));
-                koef_uniq_obschiy += koef_uniq_i.GetElement(i,0);
+                koef_uniq_i[i,0]= c[i, i];
+                koef_uniq_obschiy += koef_uniq_i[i,0];
 
-                koef_svyazi_i.SetElement(i, i, 1 - koef_uniq_i.GetElement(i,0));
-                koef_svyazi_obschiy += koef_svyazi_i.GetElement(i,0);
+                koef_svyazi_i[i, i]= 1 - koef_uniq_i[i,0];
+                koef_svyazi_obschiy += koef_svyazi_i[i,0];
             }
             //собирательная способность
 
@@ -187,9 +187,9 @@ namespace nccgle_program
             {
                 for (int j = 0; j < Constant.TermsNumber; j++)
                 {
-                    t[i] += (int)  d.GetElement(i,j); //быдло код
+                    t[i] += (int)  d[i,j]; //быдло код
                 }
-                p.SetElement (i,0, koef_uniq_i.GetElement(i,0) * koef_svyazi_i.GetElement(i, i) * t[i]);
+                p[i,0]= koef_uniq_i[i,0] * koef_svyazi_i[i, i] * t[i];
             }
 
             koef_uniq_obschiy = koef_uniq_obschiy / Constant.DocumentsNumber;
@@ -208,7 +208,7 @@ namespace nccgle_program
 
             for (int i = 0; i < Constant.TermsNumber; i++)
             {
-                bus[i] = c_shtrih.GetElement(i, i);
+                bus[i] = c_shtrih[i, i];
                 Bus += bus[i];
                 fis[i] = 1 - bus[i];
                 Fis += fis[i];
@@ -221,7 +221,7 @@ namespace nccgle_program
             //число кластеров
             double nuc = 0;
             for (int i = 0; i < Constant.DocumentsNumber; i++)
-                nuc += Math.Round(koef_uniq_i.GetElement(i,0), 3);
+                nuc += Math.Round(koef_uniq_i[i,0], 3);
             //число терминов
             double nc = Math.Round(Constant.DocumentsNumber / nuc, 3);
 
@@ -236,18 +236,18 @@ namespace nccgle_program
             Matrix tmp = new Matrix( p);
             for (int i = 0; i < nuc_; i++)
             {
-                double max = tmp.GetElement(0,0);
+                double max = tmp[0,0];
                 int maxIndex = 0;
                 for (int j = 0; j < Constant.DocumentsNumber; j++)
                 {
-                    if (tmp.GetElement( j,0) > max)
+                    if (tmp[j,0] > max)
                     {
-                        max = tmp.GetElement( j,0);
+                        max = tmp[ j,0];
                         maxIndex = j;
                     }
                 }
-                cent1.SetElement(i, 0, maxIndex);
-                tmp.SetElement(maxIndex,0, -1);
+                cent1[i, 0]= maxIndex;
+                tmp[maxIndex,0]= -1;
                 maxIndex = 0;
             }
 
@@ -305,16 +305,16 @@ namespace nccgle_program
                 //iRow = DocsKlasters.NewRow();
                 for (int j = 0; j < NekaInt; j++)
                 {
-                    if (c.GetElement((int) cent1.GetElement(j,0), i) > MaxValue)
+                    if (c[(int) cent1[j,0], i] > MaxValue)
                     {
-                        MaxValue = c.GetElement((int) cent1.GetElement (j,0), i);
+                        MaxValue = c[(int) cent1[j,0], i];
                         MaxNumber = j;
                     }
-                    if (c.GetElement( (int)cent1.GetElement(j,0), i) == MaxValue)
+                    if (c[ (int)cent1[j,0], i] == MaxValue)
                     {
-                        if (p.GetElement(i,0) > p.GetElement(MaxNumber,0))
+                        if (p[i,0] > p[MaxNumber,0])
                         {
-                            MaxValue = c.GetElement((int)cent1.GetElement(j,0), i);
+                            MaxValue = c[(int)cent1[j,0], i];
                             MaxNumber = j;
                         }
                     }
@@ -323,9 +323,9 @@ namespace nccgle_program
                 for (int k = 0; k < 6; k++)
                 {
                     if (k == MaxNumber)
-                    { MaxInRow.SetElement(i, k, 1); }
+                    { MaxInRow[i, k]= 1; }
                     else
-                    { MaxInRow.SetElement(i, k ,0); }
+                    { MaxInRow[i, k]=0; }
                     //iRow[cent1[k].ToString()] = MaxInRow.GetElement(i, k);
                 }
                 //DocsKlasters.Rows.Add(iRow);
@@ -365,7 +365,7 @@ namespace nccgle_program
                     KolKlaster = 0;
                     for (int j = 0; j < 49; j++)
                     {
-                        if (d.GetElement(j, i) == 1)
+                        if (d[j, i] == 1)
                         {
                             tempmas[iCount] = j;
                             iCount++;
@@ -373,7 +373,7 @@ namespace nccgle_program
                     }
                     for (int r = 0; r < iCount; r++)
                     {
-                        if (MaxInRow.GetElement( tempmas[r], h) == 1) KolKlaster++;
+                        if (MaxInRow[ tempmas[r], h] == 1) KolKlaster++;
                         tempmas[r] = 0;
                     }
                     if (KolKlaster > 0) m++;
@@ -381,7 +381,7 @@ namespace nccgle_program
                    // iRow[cent1[h].ToString()] = KolKlaster;
                     TermDocs += KolKlaster;
                 }
-                SrInKlaster.SetElement(i,0, TermDocs / m);
+                SrInKlaster[i,0]= TermDocs / m;
                // iRow["SR"] = Math.Round(SrInKlaster[i], 3);
                // Centroid.Rows.Add(iRow);
             }
@@ -406,10 +406,10 @@ namespace nccgle_program
                 //iRow = OneOrZero.NewRow();
                 for (int j = 0; j < 6; j++)
                 {
-                    NumberOne = KolInKlaster.GetElement(i, j) * bus[i];
-                    NumberTwo = Bus * 0.5 * SrInKlaster.GetElement(i,0);
-                    if (NumberOne > NumberTwo) OneAndZero.SetElement(i, j, 1);
-                    else OneAndZero.SetElement(i, j , 0);
+                    NumberOne = KolInKlaster[i, j] * bus[i];
+                    NumberTwo = Bus * 0.5 * SrInKlaster[i,0];
+                    if (NumberOne > NumberTwo) OneAndZero[i, j]= 1;
+                    else OneAndZero[i, j]= 0;
                    // iRow[cent1[j].ToString()] = OneAndZero.GetElement(i, j0;
                 }
                 //OneOrZero.Rows.Add(iRow);
