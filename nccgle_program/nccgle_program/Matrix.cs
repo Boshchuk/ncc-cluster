@@ -10,22 +10,14 @@ namespace nccgle_program
     {
         private int dimX = 0, dimY = 0;
         private double[,] body;
-
-        /*
-        // Мое предложение убить этот конструктор
-        public Matrix()
-        {
-            throw(new Exception("Нет конструктора гы"));
-        }
-         */
+              
         public Matrix(int dimX, int dimY)
         {
             body = new Double[dimX, dimY];
             this.dimX = dimX;
             this.dimY = dimY;
         }
-
-
+        
         public double this[int x, int y]
         {
             get
@@ -44,26 +36,7 @@ namespace nccgle_program
                 }
             }
         }
-        #region OLD SetElement & GetElement NotCommented yet
-        //Get and set Proporties
-        public void SetElement(int x, int y, double e)
-        {//..можно былобы эксепшинами кидаться, и их обрабатывать... гы
-            if (((x >= 0) && (y >= 0)) && ((x < dimX) && (y < dimY)))
-            {
-                this.body[x, y] = e;
-            }
-        }        
-
-        public double GetElement(int x, int y)
-        {//именно эксэпшинами и в место мысли был бы быдло код
-            if (((x >= 0) && (y >= 0)) && ((x < dimX) && (y < dimY)))
-            {
-                return this.body[x, y];
-            }
-            else return -999.999;
-        }
-        #endregion
-        //..есть предложение заменить па свойства... ладно наследуем класс , сто пудов ... поп позжа
+        
         public int DimX
         {
             get
