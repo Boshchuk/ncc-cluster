@@ -90,10 +90,16 @@ namespace nccgle_program
             progress.Maximum = Constant.DocumentsNumber;
             progress.Step = 1;
 
-            try
-            {
-
+#warning В этом месте неуверен, но вроде бы это так делается но посмотри ,как оно должно быть потэсти...
+          //  try
+          //  {
                 Slovar.LoadFile(Constant.PathToDictionary);
+          //  }
+          //  catch (System.IO.IOException IOEx)
+          //  {
+          //      MessageBox.Show(IOEx.Message + " Это так на будующее");
+          //      Slovar.LoadFile( ChoseFile());
+          //  }
                 for (int i = 0; i < Constant.DocumentsNumber; i++)
                 {
 
@@ -122,13 +128,29 @@ namespace nccgle_program
                 }
 
                 progress.Value = 0;
-            }
-            catch (System.IO.IOException IOEx)
-            {
-                MessageBox.Show(IOEx.Message+" Это так на будующее");
-            }
+            
+           
+
         }
 
+        //этот метод как и те, что будут обрабатывать исключения можно в отделный класс
+        //или еще есть вариант, сделать свой обработчик события ,и его же приявязать, но виг его знает ,как это делать....
+        /// <summary>
+        /// Метод обрабытки ошибки отсутсвия файла 
+        /// </summary>
+        private static string ChoseFile()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+
+            dialog.InitialDirectory = Application.ExecutablePath;
+           
+            dialog.Filter = "rtf files only(*.rtf)|*.rtf";
+            dialog.ShowDialog();
+
+            return (dialog.FileName);
+            
+        }
+        
         public static void ForMatrixS(Matrix d, Matrix s)
         {           
             double[] summa = new double[Constant.TermsNumber];
