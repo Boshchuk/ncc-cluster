@@ -6,6 +6,33 @@ using System.Windows.Forms;
 
 namespace nccgle_program
 {
+    /// <summary>
+    /// Структура для передачи данных 
+    /// для упрощенич последующего отображения
+    /// </summary>
+    public struct ManyMatrixToShow
+    {
+        Matrix KoeficientUniqI = new Matrix(Constant.DocumentsNumber, 1);
+        Matrix KoeficientSvyaziI_ = new Matrix(Constant.DocumentsNumber, 1);
+
+        Matrix Pi = new Matrix(Constant.DocumentsNumber, 0);
+
+        //DeltaS
+        double[] DeltaS = new double[Constant.TermsNumber];
+        //общий коэфициент уникальности  Bus - там так называлось
+        double PublicKoeficientUnicBus = 0;
+        //коэфициент связи
+        double KoeficientSvyaziFis = 0;
+
+
+        Matrix KolInKlaster = new Matrix(26, 6);
+
+        //sr
+        Matrix SrInKlaster = new Matrix(Constant.DocumentsNumber, 0);
+
+        //  G
+        Matrix OneAndZero = new Matrix(26, 6);
+    }
     public static class JustDoIt
     {
         public static ToolStripProgressBar progress;
