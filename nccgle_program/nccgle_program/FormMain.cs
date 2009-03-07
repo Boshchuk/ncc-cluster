@@ -61,6 +61,8 @@ namespace nccgle_program
             C = JustDoIt.MultiplyMatrix(JustDoIt.Transposition(S), S_Shtrih);
             C_Shtrih = JustDoIt.MultiplyMatrix(S, JustDoIt.Transposition(S_Shtrih));
 
+
+
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -82,6 +84,28 @@ namespace nccgle_program
                 case 4:
                     JustDoIt.RenderMatrix("Матрица C_shtrih", resultBrowser, C_Shtrih);
                     break;
+                /*
+                case 5:
+                    JustDoIt.RenderMatrix("Дельта", resultBrowser, Delta);
+                    break;
+                case  6:
+                    JustDoIt.RenderMatrix("Пи", resultBrowser, Pi);
+                    break;
+                
+                case  7:
+                    JustDoIt.RenderMatrix("Дэльта S", resultBrowser, DeltaS);
+                    break;
+                
+                        
+                        
+                        Clusters
+                        Коэф уникальности
+                        Коэф связи
+                        Общий коэф уникальности
+                        Общий коэф связи
+                        Число кластеров
+                        Число терминов
+                 */
 
             }
         }
