@@ -16,6 +16,8 @@ namespace nccgle_program
         Matrix C;
         Matrix C_Shtrih;
 
+        ManyMatrixToShow Cooficients;
+
      /*   Matrix DeltaCol1;
         Matrix PCol;
         Matrix Delta_Col;
@@ -61,7 +63,7 @@ namespace nccgle_program
             C = JustDoIt.MultiplyMatrix(JustDoIt.Transposition(S), S_Shtrih);
             C_Shtrih = JustDoIt.MultiplyMatrix(S, JustDoIt.Transposition(S_Shtrih));
 
-
+            Cooficients = JustDoIt.CalculateCoeff(D, C, S_Shtrih);
 
         }
 
@@ -84,10 +86,13 @@ namespace nccgle_program
                 case 4:
                     JustDoIt.RenderMatrix("Матрица C_shtrih", resultBrowser, C_Shtrih);
                     break;
-                /*
+                
+                // обавленные автокодом
                 case 5:
-                    JustDoIt.RenderMatrix("Дельта", resultBrowser, Delta);
+                    JustDoIt.RenderMatrix("Дельта", resultBrowser, Cooficients.DeltaS);
                     break;
+                  
+                /* * 
                 case  6:
                     JustDoIt.RenderMatrix("Пи", resultBrowser, Pi);
                     break;

@@ -8,9 +8,16 @@ namespace nccgle_program
 {
     public class Matrix
     {
-        private int dimX = 0, dimY = 0;
+        private int dimX , dimY ;
         private double[,] body;
-              
+         
+        /// <summary>
+        ///  онструктор
+        /// dimX - размерность х
+        /// dimY - размерность y
+        /// </summary>
+        /// <param name="dimX">«начение должно быть целым и больше чем 0 </param>
+        /// <param name="dimY">«начение должно быть целым и больше чем 0 </param>
         public Matrix(int dimX, int dimY)
         {
             body = new Double[dimX, dimY];
@@ -35,7 +42,7 @@ namespace nccgle_program
             {
                 if (((x >= 0) && (y >= 0)) && ((x < dimX) && (y < dimY)))
                 {
-                    this.body[x, y] = value;
+                    this.body[x, y] = (double) value;
                 }
             }
         }
@@ -75,12 +82,14 @@ namespace nccgle_program
                 }
         }
 
-        public Matrix(Matrix byWhat)
+        public Matrix(Matrix byWhat) 
         {
-         
-            for (int i = 0; i < DimX; i++)
+            body = new Double[byWhat.DimX, byWhat.DimY];
+            this.dimX = byWhat.dimX;
+            this.dimY = byWhat.dimY;
+            for (int i = 0; i < byWhat.DimX; i++)
             {
-                for (int j = 0; j < DimY; j++)
+                for (int j = 0; j < byWhat.DimY; j++)
                 {
                      this[i, j]= byWhat[i, j];   
                 }
