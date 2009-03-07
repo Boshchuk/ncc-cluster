@@ -15,23 +15,52 @@ namespace nccgle_program
         public Matrix KoeficientUniqI;
         public Matrix KoeficientSvyaziI;
 
+        public Matrix KolInKlaster;
+        public Matrix SrInKlaster ;
+
         public Matrix Pi;
 
-        //DeltaS
-        public Matrix DeltaS;
-        //общий коэфициент уникальности  Bus - там так называлось
-        public double PublicKoeficientUnicBus;//= 0;
-        //коэфициент связи
-        public double KoeficientSvyaziFis;//= 0;
+        /// <summary>
+        /// Кластеры
+        /// </summary>
+        public Matrix Clusters;
 
-        public Matrix KolInKlaster;
-        //sr
-        public Matrix SrInKlaster;
+        /// <summary>
+        /// Дэлтьта
+        /// </summary>
+        public Matrix Delta;
+        
+        /// <summary>
+        /// Дэльта S
+        /// </summary>
+        public Matrix DeltaS;
+        
+        /// <summary>
+        /// Общий коэфициент уникальности 
+        /// </summary>
+        public double PublicKoeficientUnic;
+
+        /// <summary>
+        /// Общий коэфициент связи
+        /// </summary>
+        public double PublicKoeficientSvyazi;        
         
         /// <summary>
         /// G
-       /// </summary>  
+        /// </summary>  
         public Matrix OneAndZero;
+
+        /// <summary>
+        /// Число теримнов
+        /// теоритическое?
+        /// </summary>
+        public double TerminsNumber;
+
+        /// <summary>
+        /// Число кластеров
+        /// теоритическое?
+        /// </summary>
+        public double ClustersNumber;
     }
     public static class JustDoIt
     {
@@ -101,6 +130,30 @@ namespace nccgle_program
 
             table.DocumentText = page;
         }
+
+        public static void RenderMatrix(string message, WebBrowser table, double element)
+        {
+            string page = "";
+           // int dx = m.DimX;
+           // int dy = m.DimY;
+            page += "<p>" + message + "</p>";
+            page += "<table border=1 width=100%>";
+
+          //  for (int i = 0; i < dx; i++)
+          //  {
+          //      if (i % 2 == 0) { page += "<tr>"; } // 
+          //      else { page += "<tr bgcolor=#cccccc>"; } // делает строчки разного цвета
+
+          //      for (int j = 0; j < dy; j++)
+          //     {
+                    page += "<td align=center>"+element.ToString() ;//+ Math.Round(m[i, j], 4) + "</td>";
+          //      }
+                page += "</tr>";
+          //  }
+            page += "</table>";
+
+            table.DocumentText = page;
+        }
         //..кстати в  summary можно тэги юзать 
 
         /// <summary>
@@ -154,8 +207,7 @@ namespace nccgle_program
                     Doc.Clear();
                 }
 
-                progress.Value = 0;
-            
+                progress.Value = 0;        
            
 
         }
@@ -164,6 +216,8 @@ namespace nccgle_program
         //или еще есть вариант, сделать свой обработчик события ,и его же приявязать, но виг его знает ,как это делать....
         /// <summary>
         /// Метод обрабытки ошибки отсутсвия файла 
+        /// 
+        /// не реализован до конца
         /// </summary>
         private static string ChoseFile()
         {
@@ -223,13 +277,16 @@ namespace nccgle_program
         {
 
             ManyMatrixToShow ForReturn = new ManyMatrixToShow();
+
             // частные коэфициенты уникальности
             Matrix koef_uniq_i = new Matrix(Constant.DocumentsNumber, 1);
+            
             // общий коэфициент уникальности
             double koef_uniq_obschiy = 0;
 
             // частные коэфициенты связи 
             Matrix koef_svyazi_i = new Matrix(Constant.DocumentsNumber, 1);
+            
             // общие коэфициент связи
             double koef_svyazi_obschiy = 0;
             
@@ -240,14 +297,14 @@ namespace nccgle_program
                 koef_uniq_obschiy += koef_uniq_i[i,0];
 
 #warning раньше здесь было _ [i, i] и вызывало ошибку
+
                 koef_svyazi_i[i, 0]= 1 - koef_uniq_i[i,0];
                 koef_svyazi_obschiy += koef_svyazi_i[i,0];
             }
             //собирательная способность
             int[] t = new int[Constant.DocumentsNumber];
             
-            //Pi
-            //double[] p = new double[Constant.DocumentsNumber];
+#region Pi          
             Matrix p = new Matrix(Constant.DocumentsNumber,1);
 
             for (int i = 0; i < Constant.DocumentsNumber; i++)
@@ -260,38 +317,41 @@ namespace nccgle_program
 
                 p[i,0]= koef_uniq_i[i,0] * koef_svyazi_i[i, 0] * t[i];
             }
+#endregion
 
             koef_uniq_obschiy = koef_uniq_obschiy / Constant.DocumentsNumber;
             koef_svyazi_obschiy = koef_svyazi_obschiy / Constant.DocumentsNumber;
 
             //DeltaS
             Matrix bus = new Matrix (Constant.TermsNumber,1);
+            
             //общий коэфициент уникальности
             double Bus = 0;
-            //коэфициент связи
+            //общий коэфициент связи
             double Fis = 0;
 
-            double[] fis = new double[Constant.TermsNumber];
+            Matrix fis = new Matrix(Constant.TermsNumber,1);
             
 
             for (int i = 0; i < Constant.TermsNumber; i++)
             {
                 bus[i,0] = c_shtrih[i, i];
                 Bus += bus[i,0];
-                fis[i] = 1 - bus[i,0];
-                Fis += fis[i];
+                fis[i,0] = 1 - bus[i,0];
+                Fis += fis[i,0];
             }
             Bus = Math.Round(Bus / Constant.TermsNumber, 3);
             Fis = Math.Round(Fis / Constant.TermsNumber, 3);
 
             //*теоретическое число кластеров*
-
+#warning число 3
             //число кластеров
             double nuc = 0;
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
                 nuc += Math.Round(koef_uniq_i[i, 0], 3);
             }
+
             //число терминов
             double nc = Math.Round(Constant.DocumentsNumber / nuc, 3);
 
@@ -471,19 +531,27 @@ namespace nccgle_program
             }
 #endregion
 
+            ForReturn.TerminsNumber = nc;
+            ForReturn.ClustersNumber = nuc;
+
+
+            ForReturn.Delta = fis;
             ForReturn.DeltaS = bus;
+
             ForReturn.KoeficientUniqI = koef_uniq_i;
             ForReturn.KoeficientSvyaziI = koef_svyazi_i;
 
-            ForReturn.KoeficientSvyaziFis = Fis;
+            ForReturn.PublicKoeficientUnic = Bus;
+            ForReturn.PublicKoeficientSvyazi = Fis;
+
 
             ForReturn.OneAndZero = OneAndZero;
             ForReturn.Pi = p;
 
-
             ForReturn.KolInKlaster = KolInKlaster;
             ForReturn.SrInKlaster = SrInKlaster;
 
+            ForReturn.Clusters = cent1;
 
             return ForReturn;
         }
