@@ -12,26 +12,26 @@ namespace nccgle_program
     /// </summary>
     public struct ManyMatrixToShow
     {
-        Matrix KoeficientUniqI = new Matrix(Constant.DocumentsNumber, 1);
-        Matrix KoeficientSvyaziI_ = new Matrix(Constant.DocumentsNumber, 1);
+        public Matrix KoeficientUniqI;
+        public Matrix KoeficientSvyaziI;
 
-        Matrix Pi = new Matrix(Constant.DocumentsNumber, 0);
+        public Matrix Pi;
 
         //DeltaS
-        double[] DeltaS = new double[Constant.TermsNumber];
+        public Matrix DeltaS;
         //общий коэфициент уникальности  Bus - там так называлось
-        double PublicKoeficientUnicBus = 0;
+        public double PublicKoeficientUnicBus;//= 0;
         //коэфициент связи
-        double KoeficientSvyaziFis = 0;
+        public double KoeficientSvyaziFis;//= 0;
 
-
-        Matrix KolInKlaster = new Matrix(26, 6);
-
+        public Matrix KolInKlaster;
         //sr
-        Matrix SrInKlaster = new Matrix(Constant.DocumentsNumber, 0);
-
-        //  G
-        Matrix OneAndZero = new Matrix(26, 6);
+        public Matrix SrInKlaster;
+        
+        /// <summary>
+        /// G
+       /// </summary>  
+        public Matrix OneAndZero;
     }
     public static class JustDoIt
     {
@@ -117,7 +117,7 @@ namespace nccgle_program
             progress.Maximum = Constant.DocumentsNumber;
             progress.Step = 1;
 
-#warning В этом месте неуверен, но вроде бы это так делается но посмотри ,как оно должно быть потэсти...
+//#warning В этом месте неуверен, но вроде бы это так делается но посмотри ,как оно должно быть потэсти...
           //  try
           //  {
                 Slovar.LoadFile(Constant.PathToDictionary);
@@ -180,7 +180,7 @@ namespace nccgle_program
         
         public static void ForMatrixS(Matrix d, Matrix s)
         {           
-            double[] summa = new double[Constant.TermsNumber];
+           double[] summa = new double[Constant.TermsNumber];
 
             for (int j = 0; j < Constant.TermsNumber; j++)
             {
@@ -219,8 +219,10 @@ namespace nccgle_program
             }
         }
 
-        public static void Coeff(Matrix d, Matrix c, Matrix c_shtrih)
+        public static ManyMatrixToShow CalculateCoeff(Matrix d, Matrix c, Matrix c_shtrih)
         {
+
+            ManyMatrixToShow ForReturn = new ManyMatrixToShow();
             // частные коэфициенты уникальности
             Matrix koef_uniq_i = new Matrix(Constant.DocumentsNumber, 1);
             // общий коэфициент уникальности
@@ -237,7 +239,8 @@ namespace nccgle_program
                 koef_uniq_i[i,0]= c[i, i];
                 koef_uniq_obschiy += koef_uniq_i[i,0];
 
-                koef_svyazi_i[i, i]= 1 - koef_uniq_i[i,0];
+#warning раньше здесь было _ [i, i] и вызывало ошибку
+                koef_svyazi_i[i, 0]= 1 - koef_uniq_i[i,0];
                 koef_svyazi_obschiy += koef_svyazi_i[i,0];
             }
             //собирательная способность
@@ -245,7 +248,7 @@ namespace nccgle_program
             
             //Pi
             //double[] p = new double[Constant.DocumentsNumber];
-            Matrix p = new Matrix(Constant.DocumentsNumber,0); // 
+            Matrix p = new Matrix(Constant.DocumentsNumber,1);
 
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
@@ -253,14 +256,16 @@ namespace nccgle_program
                 {
                     t[i] += (int)  d[i,j]; //быдло код
                 }
-                p[i,0]= koef_uniq_i[i,0] * koef_svyazi_i[i, i] * t[i];
+#warning раньше здесь было                              [i, i] и вызывало ошибку
+
+                p[i,0]= koef_uniq_i[i,0] * koef_svyazi_i[i, 0] * t[i];
             }
 
             koef_uniq_obschiy = koef_uniq_obschiy / Constant.DocumentsNumber;
             koef_svyazi_obschiy = koef_svyazi_obschiy / Constant.DocumentsNumber;
 
             //DeltaS
-            double[] bus = new double[Constant.TermsNumber];
+            Matrix bus = new Matrix (Constant.TermsNumber,1);
             //общий коэфициент уникальности
             double Bus = 0;
             //коэфициент связи
@@ -271,9 +276,9 @@ namespace nccgle_program
 
             for (int i = 0; i < Constant.TermsNumber; i++)
             {
-                bus[i] = c_shtrih[i, i];
-                Bus += bus[i];
-                fis[i] = 1 - bus[i];
+                bus[i,0] = c_shtrih[i, i];
+                Bus += bus[i,0];
+                fis[i] = 1 - bus[i,0];
                 Fis += fis[i];
             }
             Bus = Math.Round(Bus / Constant.TermsNumber, 3);
@@ -284,7 +289,9 @@ namespace nccgle_program
             //число кластеров
             double nuc = 0;
             for (int i = 0; i < Constant.DocumentsNumber; i++)
-                nuc += Math.Round(koef_uniq_i[i,0], 3);
+            {
+                nuc += Math.Round(koef_uniq_i[i, 0], 3);
+            }
             //число терминов
             double nc = Math.Round(Constant.DocumentsNumber / nuc, 3);
 
@@ -293,7 +300,7 @@ namespace nccgle_program
             int nuc_ = Convert.ToInt32(nuc);
 
             //из него делают кластер, если n>6
-            Matrix cent1 = new Matrix( nuc_,0);
+            Matrix cent1 = new Matrix( nuc_,1);
 
 
             Matrix tmp = new Matrix( p);
@@ -348,7 +355,7 @@ namespace nccgle_program
             //////////////////////////////////////////////////////////////////////////////////////
            
             //принадлеж юзать для поиска...
-            int NekaInt = 6;// так у врагов
+                int NekaInt = nuc_;    // 6;// так у врагов
  
             Matrix MaxInRow = new Matrix(Constant.DocumentsNumber, NekaInt);
             double MaxValue;
@@ -381,7 +388,7 @@ namespace nccgle_program
                     }
                 }
 
-                for (int k = 0; k < 6; k++)
+                for (int k = 0; k < nuc_; k++)
                 {
                     if (k == MaxNumber)
                     { 
@@ -400,33 +407,31 @@ namespace nccgle_program
             //////////////////////////////////////////////////////////////////////////////////////
           
 
-            //центроид и ср
-            Matrix KolInKlaster = new Matrix(26, 6);
-            int[] tempmas = new int[49];
+#region центроид и ср                       //26,6
+            Matrix KolInKlaster = new Matrix(d.DimX, nuc_);
+            int[] tempmas = new int[Constant.DocumentsNumber];
             
             //sr
-            Matrix SrInKlaster = new Matrix(Constant.DocumentsNumber,0);
+            Matrix SrInKlaster = new Matrix(Constant.DocumentsNumber,1);
             int iCount;
             int KolKlaster;
             double TermDocs;
             double m;
-
-
           
 //            iCol = new DataColumn("SR");
 //            Centroid.Columns.Add(iCol);
-            for (int i = 0; i < 26; i++)
+            for (int i = 0; i < d.DimY; i++)
             {
                // iRow = Centroid.NewRow();
                 TermDocs = 0;
                 m = 0;
-                for (int h = 0; h < 6; h++)
+                for (int h = 0; h < nuc_; h++)
                 {
                     iCount = 0;
                     KolKlaster = 0;
-                    for (int j = 0; j < 49; j++)
+                    for (int j = 0; j < d.DimX; j++)
                     {
-                        if (d[j, i] == 1)
+                        if (d[j, i] == 1d)
                         {
                             tempmas[iCount] = j;
                             iCount++;
@@ -444,25 +449,43 @@ namespace nccgle_program
                 }
                 SrInKlaster[i,0]= TermDocs / m;
             }
-    
-         
+#endregion
 
-          //  G
-            Matrix OneAndZero = new Matrix(26, 6);
+
+            #region G
+            //  G
+            Matrix OneAndZero = new Matrix(d.DimX, nuc_);
             double NumberOne;
             double NumberTwo;
             
 
-            for (int i = 0; i < 26; i++)
+            for (int i = 0; i < Constant.TermsNumber; i++)
             {
-                for (int j = 0; j < 6; j++)
+                for (int j = 0; j < nuc_; j++)
                 {
-                    NumberOne = KolInKlaster[i, j] * bus[i];
+                    NumberOne = KolInKlaster[i, j] * bus[i,0];
                     NumberTwo = Bus * 0.5 * SrInKlaster[i,0];
                     if (NumberOne > NumberTwo) OneAndZero[i, j]= 1;
                     else OneAndZero[i, j]= 0;
                 }
-            }           
+            }
+#endregion
+
+            ForReturn.DeltaS = bus;
+            ForReturn.KoeficientUniqI = koef_uniq_i;
+            ForReturn.KoeficientSvyaziI = koef_svyazi_i;
+
+            ForReturn.KoeficientSvyaziFis = Fis;
+
+            ForReturn.OneAndZero = OneAndZero;
+            ForReturn.Pi = p;
+
+
+            ForReturn.KolInKlaster = KolInKlaster;
+            ForReturn.SrInKlaster = SrInKlaster;
+
+
+            return ForReturn;
         }
     }
 }
