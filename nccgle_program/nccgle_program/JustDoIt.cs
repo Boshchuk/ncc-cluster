@@ -58,7 +58,7 @@ namespace nccgle_program
 
         /// <summary>
         /// „исло кластеров
-        /// теоритическое?
+        /// теоретическое?
         /// </summary>
         public double ClustersNumber;
     }
