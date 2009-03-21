@@ -6,6 +6,10 @@ namespace nccgle_program
 {
     public static class Constant
     {
+        /// <summary>
+        /// Число документов с которыми пытается работать программа
+        /// пытается, по тому что точнь сказать никогда нельзя
+        /// </summary>
         public static int DocumentsNumber = 62;
         public static int TermsNumber = 41;
         public static string PathToDictionary = "docs/slovar.rtf";
