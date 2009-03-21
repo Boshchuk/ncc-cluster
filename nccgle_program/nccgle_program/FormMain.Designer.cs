@@ -60,7 +60,7 @@ namespace nccgle_program
             "Delta",
             "Pi",
             "DeltaS",
-            "Clusters",
+            "------------",
             "Коэф уникальности",
             "Коэф связи",
             "Общий коэф уникальности",

@@ -18,17 +18,6 @@ namespace nccgle_program
 
         ManyMatrixToShow Cooficients;
 
-     /*   Matrix DeltaCol1;
-        Matrix PCol;
-        Matrix Delta_Col;
-        Matrix Klasters;
-        Matrix KfUnic1;
-        Matrix KfSvyaz1;
-        Matrix KfUnic2;
-        Matrix KfSvyaz2;
-        Matrix KolKlasters;
-        Matrix KolTerms;*/
-
         public FormMain()
         {
             InitializeComponent();
@@ -40,18 +29,6 @@ namespace nccgle_program
             S_Shtrih = new Matrix(Constant.DocumentsNumber, Constant.TermsNumber);
             C = new Matrix(Constant.TermsNumber, Constant.TermsNumber);
             C_Shtrih = new Matrix(Constant.DocumentsNumber, Constant.DocumentsNumber);
-
-            /*Matrix DeltaCol1 = new Matrix("Delta");
-            Matrix PCol = new Matrix("P");
-            Matrix Delta_Col = new Matrix("DeltaS");
-            Matrix Klasters = new Matrix("Klasters");
-            Matrix KfUnic1 = new Matrix("Общ_коэф_уник.");
-            Matrix KfSvyaz1 = new Matrix("Коэф_связи");
-            Matrix KfUnic2 = new Matrix("Общ. коэф. уник.");
-            Matrix KfSvyaz2 = new Matrix("Коэф. связи");
-            Matrix KolKlasters = new Matrix("Число кластеров");
-            Matrix KolTerms = new Matrix("Число терминов");*/
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -72,7 +49,7 @@ namespace nccgle_program
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
-                    JustDoIt.RenderMatrix("Матрица D", resultBrowser, D);
+                    JustDoIt.RenderMatrix("Матрица D<br>Горизонталь - термины \\ вертикаль - документы", resultBrowser, D);
                     break;
                 case 1:
                     JustDoIt.RenderMatrix("Матрица S", resultBrowser, S);
@@ -87,19 +64,19 @@ namespace nccgle_program
                     JustDoIt.RenderMatrix("Матрица C_shtrih", resultBrowser, C_Shtrih);
                     break;
                 
-                // обавленные автокодом 
+                // добавленные
                 case 5:
                     JustDoIt.RenderMatrix("Delta", resultBrowser, Cooficients.Delta);
                     break;
                 case 6:
-                    JustDoIt.RenderMatrix("P (пи :-)", resultBrowser, Cooficients.Pi);
+                    JustDoIt.RenderMatrix("Pi", resultBrowser, Cooficients.Pi);
                     break;
                 case 7:
                     JustDoIt.RenderMatrix("DeltaS", resultBrowser, Cooficients.DeltaS);
                     break;
 
                 case 8:
-                    JustDoIt.RenderMatrix("Clusters", resultBrowser, Cooficients.Clusters);
+                    //JustDoIt.RenderMatrix("Clusters", resultBrowser, Cooficients.Clusters);
                     break;
 
                 case 9:
@@ -110,10 +87,10 @@ namespace nccgle_program
                     break;
 
                 case 11:
-                    JustDoIt.RenderMatrix("Общий коэф уникальности", resultBrowser, Cooficients.PublicKoeficientUnic);
+                    JustDoIt.RenderMatrix("Общий коэф уникальности", resultBrowser, Cooficients.ObschKoeficientUnic);
                     break;
                 case 12:
-                    JustDoIt.RenderMatrix("Общий коэф связи", resultBrowser, Cooficients.PublicKoeficientSvyazi);
+                    JustDoIt.RenderMatrix("Общий коэф связи", resultBrowser, Cooficients.ObschKoeficientSvyazi);
                     break;
 
                 case 13:
@@ -124,8 +101,6 @@ namespace nccgle_program
                     JustDoIt.RenderMatrix("Число терминов", resultBrowser, Cooficients.TerminsNumber);
                     break;
                      
-   
-
                 /*        
 Delta+ 5
 Pi+6

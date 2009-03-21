@@ -6,68 +6,12 @@ using System.Windows.Forms;
 
 namespace nccgle_program
 {
-    /// <summary>
-    /// Структура для передачи данных 
-    /// для упрощенич последующего отображения
-    /// </summary>
-    public struct ManyMatrixToShow
-    {
-        public Matrix KoeficientUniqI;
-        public Matrix KoeficientSvyaziI;
-
-        public Matrix KolInKlaster;
-        public Matrix SrInKlaster ;
-
-        public Matrix Pi;
-
-        /// <summary>
-        /// Кластеры
-        /// </summary>
-        public Matrix Clusters;
-
-        /// <summary>
-        /// Дэлтьта
-        /// </summary>
-        public Matrix Delta;
-        
-        /// <summary>
-        /// Дэльта S
-        /// </summary>
-        public Matrix DeltaS;
-        
-        /// <summary>
-        /// Общий коэфициент уникальности 
-        /// </summary>
-        public double PublicKoeficientUnic;
-
-        /// <summary>
-        /// Общий коэфициент связи
-        /// </summary>
-        public double PublicKoeficientSvyazi;        
-        
-        /// <summary>
-        /// G
-        /// </summary>  
-        public Matrix OneAndZero;
-
-        /// <summary>
-        /// Число теримнов
-        /// теоритическое?
-        /// </summary>
-        public double TerminsNumber;
-
-        /// <summary>
-        /// Число кластеров
-        /// теоретическое?
-        /// </summary>
-        public double ClustersNumber;
-    }
     public static class JustDoIt
     {
         public static ToolStripProgressBar progress;
         public static ToolStripStatusLabel log_bar;
 
-        public static Matrix MultiplyMatrix(Matrix m1, Matrix m2) 
+        public static Matrix MultiplyMatrix(Matrix m1, Matrix m2)
         {
             if (m1.DimX == m2.DimY)
             {
@@ -87,7 +31,7 @@ namespace nccgle_program
                         {
                             tmp = tmp + (m1[g, i] * m2[j, g]);
                         }
-                        m3[i, j]= tmp;
+                        m3[i, j] = tmp;
                         tmp = 0;
                     }
 
@@ -109,20 +53,25 @@ namespace nccgle_program
 
         public static void RenderMatrix(string message, WebBrowser table, Matrix m)
         {
-            string page = "";
             int dx = m.DimX;
             int dy = m.DimY;
+            bool square = (dx == dy);
+
+            string page = "";
             page += "<p>" + message + "</p>";
             page += "<table border=1 width=100%>";
-
             for (int i = 0; i < dx; i++)
             {
-                if (i % 2 == 0){ page += "<tr>";} // 
-                else { page += "<tr bgcolor=#cccccc>"; } // делает строчки разного цвета
+                if (i % 2 == 0) { page += "<tr>"; }
+                else { page += "<tr bgcolor=#cccccc>"; }
 
                 for (int j = 0; j < dy; j++)
-                {   
-                    page += "<td align=center>" + Math.Round(m[i, j], 4) + "</td>";
+                {
+                    if ((i == j) && square)
+                    {
+                        page += "<td align=center bgcolor=#aaaaaa>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
+                    }
+                    else page += "<td align=center>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
                 }
                 page += "</tr>";
             }
@@ -134,120 +83,90 @@ namespace nccgle_program
         public static void RenderMatrix(string message, WebBrowser table, double element)
         {
             string page = "";
-           // int dx = m.DimX;
-           // int dy = m.DimY;
             page += "<p>" + message + "</p>";
             page += "<table border=1 width=100%>";
-
-          //  for (int i = 0; i < dx; i++)
-          //  {
-          //      if (i % 2 == 0) { page += "<tr>"; } // 
-          //      else { page += "<tr bgcolor=#cccccc>"; } // делает строчки разного цвета
-
-          //      for (int j = 0; j < dy; j++)
-          //     {
-                    page += "<td align=center>"+element.ToString() ;//+ Math.Round(m[i, j], 4) + "</td>";
-          //      }
-                page += "</tr>";
-          //  }
+            page += "<td align=center>" + element.ToString();
+            page += "</tr>";
             page += "</table>";
-
             table.DocumentText = page;
-        }
-        //..кстати в  summary можно тэги юзать 
+        } 
 
         /// <summary>
         /// Вызов метода заполнения матрицы D
         /// (модели множества документов)
         /// </summary>
-        /// <param name="m"></param>
+        /// <param name="m">Ссылка на матрицу для заполнения</param>
         public static void ForMatrixD(Matrix m) // заполнение матрицы D (модели множества документов)
         {   // тут был быдлокод
-            RichTextBox Slovar = new RichTextBox(); 
+            RichTextBox Slovar = new RichTextBox();
             RichTextBox Doc = new RichTextBox();
 
             progress.Minimum = 0;
             progress.Maximum = Constant.DocumentsNumber;
             progress.Step = 1;
 
-//#warning В этом месте неуверен, но вроде бы это так делается но посмотри ,как оно должно быть потэсти...
-          //  try
-          //  {
-                Slovar.LoadFile(Constant.PathToDictionary);
-          //  }
-          //  catch (System.IO.IOException IOEx)
-          //  {
-          //      MessageBox.Show(IOEx.Message + " Это так на будующее");
-          //      Slovar.LoadFile( ChoseFile());
-          //  }
-                for (int i = 0; i < Constant.DocumentsNumber; i++)
+            Slovar.LoadFile(Constant.PathToDictionary);
+            for (int i = 0; i < Constant.DocumentsNumber; i++)
+            {
+
+                Doc.LoadFile(Constant.PathToDocuments + (i + 1).ToString() + Constant.DocumentsFileExtension);
+                for (int j = 0; j < Constant.TermsNumber; j++)
                 {
+                    string text = Slovar.Lines[j];
+                    int current_position = 0;
 
-                    Doc.LoadFile(Constant.PathToDocuments + (i + 1).ToString() + Constant.DocumentsFileExtension);
-                    for (int j = 0; j < Constant.TermsNumber; j++)
+                    while (text.Length != 0)
                     {
-                        string text = Slovar.Lines[j];
-                        int current_position = 0;
+                        current_position = text.IndexOf("/");
+                        string template = text.Substring(0, current_position);
+                        text = text.Remove(0, current_position + 1);
 
-                        while (text.Length != 0)
+                        if (Doc.Find(template) != -1)
                         {
-                            current_position = text.IndexOf("/");
-                            string template = text.Substring(0, current_position);
-                            text = text.Remove(0, current_position + 1);
-
-                            if (Doc.Find(template) != -1)
-                            {
-                                m[i, j] = 1;
-                            }
-                            else m[i, j] = 0;
+                            m[i, j] = 1;
                         }
+                        else m[i, j] = 0;
                     }
-
-                    progress.PerformStep();
-                    Doc.Clear();
                 }
 
-                progress.Value = 0;        
-           
+                progress.PerformStep();
+                Doc.Clear();
+            }
+
+            progress.Value = 0;
+
 
         }
 
-        //этот метод как и те, что будут обрабатывать исключения можно в отделный класс
-        //или еще есть вариант, сделать свой обработчик события ,и его же приявязать, но виг его знает ,как это делать....
-        /// <summary>
-        /// Метод обрабытки ошибки отсутсвия файла 
-        /// 
-        /// не реализован до конца
-        /// </summary>
-        private static string ChoseFile()
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
+        //private static string ChoseFile()
+        //{
+        //    OpenFileDialog dialog = new OpenFileDialog();
 
-            dialog.InitialDirectory = Application.ExecutablePath;
-           
-            dialog.Filter = "rtf files only(*.rtf)|*.rtf";
-            dialog.ShowDialog();
+        //    dialog.InitialDirectory = Application.ExecutablePath;
 
-            return (dialog.FileName);
-            
-        }
-        
+        //    dialog.Filter = "rtf files only(*.rtf)|*.rtf";
+        //    dialog.ShowDialog();
+
+        //    return (dialog.FileName);
+
+        //}
+
         public static void ForMatrixS(Matrix d, Matrix s)
-        {           
-           double[] summa = new double[Constant.TermsNumber];
+        {
+            double[] summa = new double[Constant.TermsNumber];
 
             for (int j = 0; j < Constant.TermsNumber; j++)
             {
                 for (int i = 0; i < Constant.DocumentsNumber; i++)
                 {
-                    summa[j] += d[i,j];
+                    summa[j] += d[i, j];
                 }
             }
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
                 for (int j = 0; j < Constant.TermsNumber; j++)
                 {
-                    s[i,j]= d[i,j] / summa[j] ;
+                    s[i, j] = d[i, j] / summa[j];
                 }
             }
         }
@@ -268,7 +187,7 @@ namespace nccgle_program
             {
                 for (int j = 0; j < Constant.TermsNumber; j++)
                 {
-                    s[i, j]= d[i, j] / summa[i];
+                    s[i, j] = d[i, j] / summa[i];
                 }
             }
         }
@@ -280,280 +199,231 @@ namespace nccgle_program
 
             // частные коэфициенты уникальности
             Matrix koef_uniq_i = new Matrix(Constant.DocumentsNumber, 1);
-            
+
             // общий коэфициент уникальности
             double koef_uniq_obschiy = 0;
 
             // частные коэфициенты связи 
             Matrix koef_svyazi_i = new Matrix(Constant.DocumentsNumber, 1);
-            
+
             // общие коэфициент связи
             double koef_svyazi_obschiy = 0;
-            
+
 
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
-                koef_uniq_i[i,0]= c[i, i];
-                koef_uniq_obschiy += koef_uniq_i[i,0];
+                koef_uniq_i[i, 0] = c[i, i];
+                koef_uniq_obschiy += koef_uniq_i[i, 0];
 
-#warning раньше здесь было _ [i, i] и вызывало ошибку
-
-                koef_svyazi_i[i, 0]= 1 - koef_uniq_i[i,0];
-                koef_svyazi_obschiy += koef_svyazi_i[i,0];
+                koef_svyazi_i[i, 0] = 1 - koef_uniq_i[i, 0];
+                koef_svyazi_obschiy += koef_svyazi_i[i, 0];
             }
             //собирательная способность
             int[] t = new int[Constant.DocumentsNumber];
-            
-#region Pi          
-            Matrix p = new Matrix(Constant.DocumentsNumber,1);
+
+            Matrix p = new Matrix(Constant.DocumentsNumber, 1); // вектор Пи
 
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
                 for (int j = 0; j < Constant.TermsNumber; j++)
                 {
-                    t[i] += (int)  d[i,j]; //быдло код
+                    t[i] += (int)d[i, j];
                 }
-#warning раньше здесь было                              [i, i] и вызывало ошибку
-
-                p[i,0]= koef_uniq_i[i,0] * koef_svyazi_i[i, 0] * t[i];
+                p[i, 0] = koef_uniq_i[i, 0] * koef_svyazi_i[i, 0] * t[i];
             }
-#endregion
 
             koef_uniq_obschiy = koef_uniq_obschiy / Constant.DocumentsNumber;
             koef_svyazi_obschiy = koef_svyazi_obschiy / Constant.DocumentsNumber;
 
             //DeltaS
-            Matrix bus = new Matrix (Constant.TermsNumber,1);
-            
+            Matrix bus = new Matrix(Constant.TermsNumber, 1);
+
             //общий коэфициент уникальности
             double Bus = 0;
             //общий коэфициент связи
             double Fis = 0;
 
-            Matrix fis = new Matrix(Constant.TermsNumber,1);
-            
+            Matrix fis = new Matrix(Constant.TermsNumber, 1);
 
             for (int i = 0; i < Constant.TermsNumber; i++)
             {
-                bus[i,0] = c_shtrih[i, i];
-                Bus += bus[i,0];
-                fis[i,0] = 1 - bus[i,0];
-                Fis += fis[i,0];
+                bus[i, 0] = c_shtrih[i, i];
+                Bus += bus[i, 0];
+                fis[i, 0] = 1 - bus[i, 0];
+                Fis += fis[i, 0];
             }
-            Bus = Math.Round(Bus / Constant.TermsNumber, 3);
-            Fis = Math.Round(Fis / Constant.TermsNumber, 3);
+            Bus = Math.Round(Bus / Constant.TermsNumber, Constant.RoundSymbolsCount);
+            Fis = Math.Round(Fis / Constant.TermsNumber, Constant.RoundSymbolsCount);
 
             //*теоретическое число кластеров*
-#warning число 3
             //число кластеров
             double nuc = 0;
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
-                nuc += Math.Round(koef_uniq_i[i, 0], 3);
+                nuc += Math.Round(koef_uniq_i[i, 0], Constant.RoundSymbolsCount);
             }
 
             //число терминов
-            double nc = Math.Round(Constant.DocumentsNumber / nuc, 3);
+            double nc = Math.Round(Constant.DocumentsNumber / nuc, Constant.RoundSymbolsCount);
 
             //построение центроидов
 
             int nuc_ = Convert.ToInt32(nuc);
 
             //из него делают кластер, если n>6
-            Matrix cent1 = new Matrix( nuc_,1);
+            Matrix cent1 = new Matrix(nuc_, 1);
 
 
-            Matrix tmp = new Matrix( p);
+            Matrix tmp = new Matrix(p);
             for (int i = 0; i < nuc_; i++)
             {
-                double max = tmp[0,0];
+                double max = tmp[0, 0];
                 int maxIndex = 0;
                 for (int j = 0; j < Constant.DocumentsNumber; j++)
                 {
-                    if (tmp[j,0] > max)
+                    if (tmp[j, 0] > max)
                     {
-                        max = tmp[ j,0];
+                        max = tmp[j, 0];
                         maxIndex = j;
                     }
                 }
-                cent1[i, 0]= maxIndex;
-                tmp[maxIndex,0]= -1;
+                cent1[i, 0] = maxIndex;
+                tmp[maxIndex, 0] = -1;
                 maxIndex = 0;
             }
 
-
-          //  for (int n = 0; n < Constant.DocumentsNumber; n++)
-          //  {
-          //      iRow = Others.NewRow();
-          //      iRow[DeltaCol1] = Math.Round(bu[n], 3);
-            //     iRow[PCol] = Math.Round(p[n], 5);
-
             #region Gipotyza
             // вывод только первой половины Дельта S?
-            int n=0;
+            int n = 0;
             //..есть предположение ,что их просто мало
-                if (n < 26) {
-              //      iRow[Delta_Col] = Math.Round(bus[n], 3); 
-                }
-            //
-
-            //
-             //   if (n < 6) { iRow[Klasters] = cent1[n]; }
-             //   if (n < 1)
-             //   {
-            //        iRow[KfUnic1] = Math.Round(Bu, 3);
-            //        iRow[KfSvyaz1] = Math.Round(Fi, 3);
-            //        iRow[KfUnic2] = Math.Round(Bus, 3);
-            //        iRow[KfSvyaz2] = Math.Round(Fis, 3);
-            //        iRow[KolKlasters] = Math.Round(nuc, 3);
-            //        iRow[KolTerms] = Math.Round(nc, 3);
-            //    }
-            //    Others.Rows.Add(iRow);
+            if (n < 26)
+            {
             #endregion
-            /* dataGridView6.DataSource = Others;
-            */
-            //////////////////////////////////////////////////////////////////////////////////////
-           
-            //принадлеж юзать для поиска...
-                int NekaInt = nuc_;    // 6;// так у врагов
- 
-            Matrix MaxInRow = new Matrix(Constant.DocumentsNumber, NekaInt);
-            double MaxValue;
-            int MaxNumber;
-            /*for (int i = 0; i < NekaInt; i++)
-            {
-                iCol = new DataColumn(cent1[i].ToString());
-                DocsKlasters.Columns.Add(iCol);
-            }*/
 
-            for (int i = 0; i < Constant.DocumentsNumber; i++)
-            {
-                MaxValue = 0;
-                MaxNumber = 0;
-                //iRow = DocsKlasters.NewRow();
-                for (int j = 0; j < NekaInt; j++)
+                //принадлеж юзать для поиска...
+                int NekaInt = nuc_;    // 6;// так у врагов
+
+                Matrix MaxInRow = new Matrix(Constant.DocumentsNumber, NekaInt);
+                double MaxValue;
+                int MaxNumber;
+
+                for (int i = 0; i < Constant.DocumentsNumber; i++)
                 {
-                    if (c[(int) cent1[j,0], i] > MaxValue)
+                    MaxValue = 0;
+                    MaxNumber = 0;
+                    for (int j = 0; j < NekaInt; j++)
                     {
-                        MaxValue = c[(int) cent1[j,0], i];
-                        MaxNumber = j;
-                    }
-                    if (c[ (int)cent1[j,0], i] == MaxValue)
-                    {
-                        if (p[i,0] > p[MaxNumber,0])
+                        if (c[(int)cent1[j, 0], i] > MaxValue)
                         {
-                            MaxValue = c[(int)cent1[j,0], i];
+                            MaxValue = c[(int)cent1[j, 0], i];
                             MaxNumber = j;
                         }
-                    }
-                }
-
-                for (int k = 0; k < nuc_; k++)
-                {
-                    if (k == MaxNumber)
-                    { 
-                        MaxInRow[i, k]= 1; 
-                    }
-                    else
-                    {
-                        MaxInRow[i, k]=0; 
-                    }                    
-                }
-                //DocsKlasters.Rows.Add(iRow);
-            }
-        
-            
-             
-            //////////////////////////////////////////////////////////////////////////////////////
-          
-
-#region центроид и ср                       //26,6
-            Matrix KolInKlaster = new Matrix(d.DimX, nuc_);
-            int[] tempmas = new int[Constant.DocumentsNumber];
-            
-            //sr
-            Matrix SrInKlaster = new Matrix(Constant.DocumentsNumber,1);
-            int iCount;
-            int KolKlaster;
-            double TermDocs;
-            double m;
-          
-//            iCol = new DataColumn("SR");
-//            Centroid.Columns.Add(iCol);
-            for (int i = 0; i < d.DimY; i++)
-            {
-               // iRow = Centroid.NewRow();
-                TermDocs = 0;
-                m = 0;
-                for (int h = 0; h < nuc_; h++)
-                {
-                    iCount = 0;
-                    KolKlaster = 0;
-                    for (int j = 0; j < d.DimX; j++)
-                    {
-                        if (d[j, i] == 1d)
+                        if (c[(int)cent1[j, 0], i] == MaxValue)
                         {
-                            tempmas[iCount] = j;
-                            iCount++;
+                            if (p[i, 0] > p[MaxNumber, 0])
+                            {
+                                MaxValue = c[(int)cent1[j, 0], i];
+                                MaxNumber = j;
+                            }
                         }
                     }
-                    for (int r = 0; r < iCount; r++)
+
+                    for (int k = 0; k < nuc_; k++)
                     {
-                        if (MaxInRow[ tempmas[r], h] == 1) KolKlaster++;
-                        tempmas[r] = 0;
+                        if (k == MaxNumber)
+                        {
+                            MaxInRow[i, k] = 1;
+                        }
+                        else
+                        {
+                            MaxInRow[i, k] = 0;
+                        }
                     }
-                    if (KolKlaster > 0) m++;
-                    KolInKlaster[i, h] = KolKlaster;
-         
-                    TermDocs += KolKlaster;
                 }
-                SrInKlaster[i,0]= TermDocs / m;
-            }
-#endregion
 
+                #region центроид и ср                       //26,6
+                Matrix KolInKlaster = new Matrix(d.DimX, nuc_);
+                int[] tempmas = new int[Constant.DocumentsNumber];
 
-            #region G
-            //  G
-            Matrix OneAndZero = new Matrix(d.DimX, nuc_);
-            double NumberOne;
-            double NumberTwo;
-            
+                Matrix SrInKlaster = new Matrix(Constant.DocumentsNumber, 1);
+                int iCount;
+                int KolKlaster;
+                double TermDocs;
+                double m;
 
-            for (int i = 0; i < Constant.TermsNumber; i++)
-            {
-                for (int j = 0; j < nuc_; j++)
+                for (int i = 0; i < d.DimY; i++)
                 {
-                    NumberOne = KolInKlaster[i, j] * bus[i,0];
-                    NumberTwo = Bus * 0.5 * SrInKlaster[i,0];
-                    if (NumberOne > NumberTwo) OneAndZero[i, j]= 1;
-                    else OneAndZero[i, j]= 0;
+                    TermDocs = 0;
+                    m = 0;
+                    for (int h = 0; h < nuc_; h++)
+                    {
+                        iCount = 0;
+                        KolKlaster = 0;
+                        for (int j = 0; j < d.DimX; j++)
+                        {
+                            if (d[j, i] == 1d)
+                            {
+                                tempmas[iCount] = j;
+                                iCount++;
+                            }
+                        }
+                        for (int r = 0; r < iCount; r++)
+                        {
+                            if (MaxInRow[tempmas[r], h] == 1) KolKlaster++;
+                            tempmas[r] = 0;
+                        }
+                        if (KolKlaster > 0) m++;
+                        KolInKlaster[i, h] = KolKlaster;
+
+                        TermDocs += KolKlaster;
+                    }
+                    SrInKlaster[i, 0] = TermDocs / m;
                 }
+                #endregion
+
+
+                #region G
+                //  G
+                Matrix OneAndZero = new Matrix(d.DimX, nuc_);
+                double NumberOne;
+                double NumberTwo;
+
+
+                for (int i = 0; i < Constant.TermsNumber; i++)
+                {
+                    for (int j = 0; j < nuc_; j++)
+                    {
+                        NumberOne = KolInKlaster[i, j] * bus[i, 0];
+                        NumberTwo = Bus * 0.5 * SrInKlaster[i, 0];
+                        if (NumberOne > NumberTwo) OneAndZero[i, j] = 1;
+                        else OneAndZero[i, j] = 0;
+                    }
+                }
+                #endregion
+
+                ForReturn.TerminsNumber = nc;
+                ForReturn.ClustersNumber = nuc;
+
+
+                ForReturn.Delta = fis;
+                ForReturn.DeltaS = bus;
+
+                ForReturn.KoeficientUniqI = koef_uniq_i;
+                ForReturn.KoeficientSvyaziI = koef_svyazi_i;
+
+                ForReturn.ObschKoeficientUnic = koef_uniq_obschiy;
+                ForReturn.ObschKoeficientSvyazi = koef_svyazi_obschiy;
+
+                ForReturn.OneAndZero = OneAndZero;
+                ForReturn.Pi = p;
+
+                ForReturn.KolInKlaster = KolInKlaster;
+                ForReturn.SrInKlaster = SrInKlaster;
+
+                ForReturn.Clusters = cent1;
             }
-#endregion
-
-            ForReturn.TerminsNumber = nc;
-            ForReturn.ClustersNumber = nuc;
-
-
-            ForReturn.Delta = fis;
-            ForReturn.DeltaS = bus;
-
-            ForReturn.KoeficientUniqI = koef_uniq_i;
-            ForReturn.KoeficientSvyaziI = koef_svyazi_i;
-
-            ForReturn.PublicKoeficientUnic = Bus;
-            ForReturn.PublicKoeficientSvyazi = Fis;
-
-
-            ForReturn.OneAndZero = OneAndZero;
-            ForReturn.Pi = p;
-
-            ForReturn.KolInKlaster = KolInKlaster;
-            ForReturn.SrInKlaster = SrInKlaster;
-
-            ForReturn.Clusters = cent1;
-
-            return ForReturn;
+                return ForReturn;
+            
         }
     }
 }
