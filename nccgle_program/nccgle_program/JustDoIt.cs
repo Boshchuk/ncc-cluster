@@ -40,6 +40,7 @@ namespace nccgle_program
             else return null;
         }
 
+
         public static Matrix Transposition(Matrix m)
         {
             Matrix result = new Matrix(m.DimY, m.DimX);
@@ -97,7 +98,7 @@ namespace nccgle_program
         /// </summary>
         /// <param name="m">Ссылка на матрицу для заполнения</param>
         public static void ForMatrixD(Matrix m) // заполнение матрицы D (модели множества документов)
-        {   // тут был быдлокод
+        {   
             RichTextBox Slovar = new RichTextBox();
             RichTextBox Doc = new RichTextBox();
 

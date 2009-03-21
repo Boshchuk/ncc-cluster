@@ -6,6 +6,10 @@ using System.Collections;
 
 namespace nccgle_program
 {
+    /// <summary>
+    /// Инкапсулирует двумерную матрицу элементов типа double
+    /// тут еще рекламы надо записать
+    /// </summary>
     public class Matrix
     {
         private int dimX , dimY ;
@@ -47,6 +51,9 @@ namespace nccgle_program
             }
         }
         
+        /// <summary>
+        /// Ширина матрицы, или размерность i
+        /// </summary>
         public int DimX
         {
             get
@@ -55,6 +62,9 @@ namespace nccgle_program
             }
         }
 
+        /// <summary>
+        /// Высота матрицы, или рамерность j
+        /// </summary>
         public int DimY
         {
             get
@@ -63,6 +73,9 @@ namespace nccgle_program
             }
         }
 
+        /// <summary>
+        /// Заполняет матрицу нулевыми значениями
+        /// </summary>
         public void FillZero()
         {
             for (int i = 0; i < dimX; i++)
@@ -72,6 +85,9 @@ namespace nccgle_program
                 }
         }
 
+        /// <summary>
+        /// Заполняет матрицу псевдо-случайными числами типа double
+        /// </summary>
         public void FillRandom()
         {
             Random randObj = new Random();
