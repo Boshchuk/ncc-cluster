@@ -29,6 +29,12 @@ namespace nccgle_program
             this.dimY = dimY;
         }
         
+        /// <summary>
+        /// »ндескатор дл€ прохождени€ по элементам матрицы
+        /// </summary>
+        /// <param name="x">i - ый </param>
+        /// <param name="y">j - ый</param>
+        /// <returns></returns>
         public double this[int x, int y]
         {
             get
@@ -98,6 +104,11 @@ namespace nccgle_program
                 }
         }
 
+        /// <summary>
+        ///  онструктор матрицы с параметром матрицей,т.е. сделать матрицу такую
+        /// кака€ есть
+        /// </summary>
+        /// <param name="byWhat">ћатрица, такую которую нужно сделать </param>
         public Matrix(Matrix byWhat) 
         {
             body = new Double[byWhat.DimX, byWhat.DimY];
