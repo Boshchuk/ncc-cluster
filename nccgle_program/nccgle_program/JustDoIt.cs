@@ -17,6 +17,12 @@ namespace nccgle_program
         /// </summary>
         public static ToolStripStatusLabel log_bar;
 
+        /// <summary>
+        /// Умножение матриц
+        /// </summary>
+        /// <param name="m1"></param>
+        /// <param name="m2"></param>
+        /// <returns>результат умножения матриц</returns>
         public static Matrix MultiplyMatrix(Matrix m1, Matrix m2)
         {
             if (m1.DimX == m2.DimY)
