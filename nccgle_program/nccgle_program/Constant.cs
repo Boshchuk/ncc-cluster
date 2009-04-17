@@ -8,7 +8,7 @@ namespace nccgle_program
     {
         /// <summary>
         /// Число документов с которыми пытается работать программа
-        /// пытается, по тому что точнь сказать никогда нельзя
+        /// пытается, по тому что точно сказать никогда нельзя
         /// </summary>
         public static int DocumentsNumber = 62;
         public static int TermsNumber = 41;
