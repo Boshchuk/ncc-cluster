@@ -34,7 +34,7 @@ namespace nccgle_program
         /// </summary>
         /// <param name="x">i - ый </param>
         /// <param name="y">j - ый</param>
-        /// <returns></returns>
+        /// <returns>Возвращает элемент матрицы</returns>
         public double this[int x, int y]
         {
             get
