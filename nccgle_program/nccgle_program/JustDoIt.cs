@@ -8,7 +8,13 @@ namespace nccgle_program
 {
     public static class JustDoIt
     {
+        /// <summary>
+        /// Прогресс бар
+        /// </summary>
         public static ToolStripProgressBar progress;
+        /// <summary>
+        /// Хз... Вроде статус бар...
+        /// </summary>
         public static ToolStripStatusLabel log_bar;
 
         public static Matrix MultiplyMatrix(Matrix m1, Matrix m2)

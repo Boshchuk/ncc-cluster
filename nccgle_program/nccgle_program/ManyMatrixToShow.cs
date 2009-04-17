@@ -6,7 +6,9 @@
     /// </summary>
     public struct ManyMatrixToShow
     {
-
+        /// <summary>
+        /// А что это? ))
+        /// </summary>
         public Matrix KoeficientUniqI;
         public Matrix KoeficientSvyaziI;
 
