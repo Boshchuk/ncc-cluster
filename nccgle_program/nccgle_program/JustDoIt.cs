@@ -20,9 +20,9 @@ namespace nccgle_program
         /// <summary>
         /// Умножение матриц
         /// </summary>
-        /// <param name="m1"></param>
-        /// <param name="m2"></param>
-        /// <returns>результат умножения матриц</returns>
+        /// <param name="m1">Матрыца адын</param>
+        /// <param name="m2">Матрыца два</param>
+        /// <returns>Результат умножения матриц</returns>
         public static Matrix MultiplyMatrix(Matrix m1, Matrix m2)
         {
             if (m1.DimX == m2.DimY)
@@ -63,7 +63,12 @@ namespace nccgle_program
                 }
             return result;
         }
-
+        /// <summary>
+        /// Вывод матрицы
+        /// </summary>
+        /// <param name="message">Текстовое примечание</param>
+        /// <param name="table">Куда выводить</param>
+        /// <param name="m">Что выводить</param>
         public static void RenderMatrix(string message, WebBrowser table, Matrix m)
         {
             int dx = m.DimX;
@@ -73,16 +78,27 @@ namespace nccgle_program
             string page = "";
             page += "<p>" + message + "</p>";
             page += "<table border=1 width=100%>";
+
+            if (dy > 1)
+            {
+                page += "<tr bgcolor=#ccffcc>";
+                for (int i = 0; i < dy + 1; i++)
+                {
+                    page += "<th>" + i.ToString() + "</th>";
+                }
+            }
+
             for (int i = 0; i < dx; i++)
             {
                 if (i % 2 == 0) { page += "<tr>"; }
-                else { page += "<tr bgcolor=#cccccc>"; }
+                else { page += "<tr bgcolor=#DFDFDF>"; }
 
+                page += "<th bgcolor=#ccffcc>" + (i + 1).ToString() + "</th>";
                 for (int j = 0; j < dy; j++)
                 {
                     if ((i == j) && square)
                     {
-                        page += "<td align=center bgcolor=#aaaaaa>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
+                        page += "<td align=center bgcolor=#cccccc>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
                     }
                     else page += "<td align=center>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
                 }
@@ -92,7 +108,12 @@ namespace nccgle_program
 
             table.DocumentText = page;
         }
-
+        /// <summary>
+        /// Вывод единственного элемента
+        /// </summary>
+        /// <param name="message">Текстовое примечание</param>
+        /// <param name="table">Куда выводить</param>
+        /// <param name="element">Что выводить</param>
         public static void RenderMatrix(string message, WebBrowser table, double element)
         {
             string page = "";
