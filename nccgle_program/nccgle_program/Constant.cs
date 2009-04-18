@@ -10,8 +10,8 @@ namespace nccgle_program
         /// Число документов с которыми пытается работать программа
         /// пытается, по тому что точно сказать никогда нельзя
         /// </summary>
-        public static int DocumentsNumber = 62;
-        public static int TermsNumber = 41;
+        public static int DocumentsNumber = 15;//62;
+        public static int TermsNumber = 10;//41;
         public static string PathToDictionary = "docs/slovar.rtf";
         public static string PathToDocuments = "docs/";
         public static string DocumentsFileExtension = ".rtf";
