@@ -64,57 +64,40 @@ namespace nccgle_program
                     JustDoIt.RenderMatrix("Матрица C_shtrih", resultBrowser, C_Shtrih);
                     break;
                 
-                // добавленные
                 case 5:
-                    JustDoIt.RenderMatrix("Delta", resultBrowser, Cooficients.Delta);
+                    JustDoIt.RenderMatrix("Коэффициенты связи для документов", resultBrowser, Cooficients.koef_svyazi_i);
                     break;
                 case 6:
-                    JustDoIt.RenderMatrix("Pi", resultBrowser, Cooficients.Pi);
+                    JustDoIt.RenderMatrix("Коэффициент связи общий", resultBrowser, Cooficients.koef_svyazi_obschiy);
                     break;
                 case 7:
-                    JustDoIt.RenderMatrix("DeltaS", resultBrowser, Cooficients.DeltaS);
+                    JustDoIt.RenderMatrix("Коэффициенты уникальности для документов", resultBrowser, Cooficients.koef_uniq_i);
                     break;
 
                 case 8:
-                    //JustDoIt.RenderMatrix("Clusters", resultBrowser, Cooficients.Clusters);
+                    JustDoIt.RenderMatrix("Коэффициент уникальности общий", resultBrowser, Cooficients.koef_uniq_obschiy);
                     break;
 
                 case 9:
-                    JustDoIt.RenderMatrix("Коэф уникальности", resultBrowser, Cooficients.KoeficientUniqI);
+                    JustDoIt.RenderMatrix("Число кластеров", resultBrowser, Cooficients.Nu_C);
                     break;
+
                 case 10:
-                    JustDoIt.RenderMatrix("Коэф связи", resultBrowser, Cooficients.KoeficientSvyaziI);
+                    JustDoIt.RenderMatrix("Число доков в кластере", resultBrowser, Cooficients.M_C);
                     break;
-
-                case 11:
-                    JustDoIt.RenderMatrix("Общий коэф уникальности", resultBrowser, Cooficients.ObschKoeficientUnic);
-                    break;
-                case 12:
-                    JustDoIt.RenderMatrix("Общий коэф связи", resultBrowser, Cooficients.ObschKoeficientSvyazi);
-                    break;
-
-                case 13:
-                    JustDoIt.RenderMatrix("Число кластеров", resultBrowser, Cooficients.ClustersNumber);
-                    break;
-                
-                case 14:
-                    JustDoIt.RenderMatrix("Число терминов", resultBrowser, Cooficients.TerminsNumber);
-                    break;
-                     
-                /*        
-Delta+ 5
-Pi+6
-DeltaS+7
-Clusters  8
-Коэф уникальности  + 9
-Коэф связи  + 10
-Общий коэф уникальности  + 11
-Общий коэф связи + 12
-Число кластеров +- 13
-Число терминов  +-  14
-                 */
-
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Matrix m = new Matrix(15, 1);
+            m.FillRandom();
+
+            m.vSort();
+
+            JustDoIt.RenderMatrix("degug", resultBrowser, m);
+
+
         }
     }
 }
