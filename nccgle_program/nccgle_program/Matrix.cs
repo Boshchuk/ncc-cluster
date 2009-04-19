@@ -14,6 +14,8 @@ namespace nccgle_program
     {
         private int dimX , dimY ;
         private double[,] body;
+
+
          
         /// <summary>
         /// Конструктор
@@ -78,6 +80,28 @@ namespace nccgle_program
                 return dimY;
             }
         }
+
+        public void vSort()
+        {
+            int[] help = new int[dimX];
+
+            SortedList ht = new SortedList();
+
+            if (dimY == 1)
+            {
+                for (int index = 0; index < (dimX - 1); index++)
+                {      
+                    ht.Add(body[index,0],index);
+                }
+            }
+            else System.Windows.Forms.MessageBox.Show("Error on Matrix.Sort (dimY != 1)");
+
+            for (int i = 0; i < dimX; i++)
+            {
+                body[i, 0] = (double)ht.GetKey(i);
+            }            
+        }
+
 
         /// <summary>
         /// Заполняет матрицу нулевыми значениями

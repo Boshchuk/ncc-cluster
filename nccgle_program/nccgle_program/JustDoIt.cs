@@ -13,15 +13,15 @@ namespace nccgle_program
         /// </summary>
         public static ToolStripProgressBar progress;
         /// <summary>
-        /// Хз... Вроде статус бар...
+        /// Вроде статус бар...
         /// </summary>
         public static ToolStripStatusLabel log_bar;
 
         /// <summary>
         /// Умножение матриц
         /// </summary>
-        /// <param name="m1">Матрыца адын</param>
-        /// <param name="m2">Матрыца два</param>
+        /// <param name="m1">Матрица один</param>
+        /// <param name="m2">Матрица два</param>
         /// <returns>Результат умножения матриц</returns>
         public static Matrix MultiplyMatrix(Matrix m1, Matrix m2)
         {
@@ -185,6 +185,12 @@ namespace nccgle_program
 
         //}
 
+
+        /// <summary>
+        /// Заполнение таблицы значимости терминов для каждого документа
+        /// </summary>
+        /// <param name="d">Матрица покрытия документов</param>
+        /// <param name="s">Матрица значимости терминов (заполняется в процессе)</param>
         public static void ForMatrixS(Matrix d, Matrix s)
         {
             double[] summa = new double[Constant.TermsNumber];
@@ -205,6 +211,11 @@ namespace nccgle_program
             }
         }
 
+        /// <summary>
+        /// Заполнение таблицы значимости документов для каждого термина
+        /// </summary>
+        /// <param name="d">Матрица покрытия документов</param>
+        /// <param name="s">Матрица значимости документов</param>
         public static void ForMatrixS_Shtrih(Matrix d, Matrix s)
         {
             double[] summa = new double[Constant.DocumentsNumber];
@@ -225,25 +236,27 @@ namespace nccgle_program
                 }
             }
         }
-
+        /// <summary>
+        /// Считаем все эти нечеловеческие коэффициенты
+        /// </summary>
+        /// <param name="d">Матрица покрытия документов</param>
+        /// <param name="c">Матрица коэффициентов значимости документов</param>
+        /// <param name="c_shtrih">Матрица коэффициентов значимости терминов</param>
+        /// <returns>На выходе структура с заполненными полями</returns>
         public static ManyMatrixToShow CalculateCoeff(Matrix d, Matrix c, Matrix c_shtrih)
         {
-
-            ManyMatrixToShow ForReturn = new ManyMatrixToShow();
-
-            // частные коэфициенты уникальности
+            // частные коэфициенты уникальности (для документов)
             Matrix koef_uniq_i = new Matrix(Constant.DocumentsNumber, 1);
 
-            // общий коэфициент уникальности
+            // общий коэфициент уникальности 
             double koef_uniq_obschiy = 0;
 
-            // частные коэфициенты связи 
+            // частные коэфициенты связи (для документов)
             Matrix koef_svyazi_i = new Matrix(Constant.DocumentsNumber, 1);
 
             // общие коэфициент связи
             double koef_svyazi_obschiy = 0;
-
-
+            
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
                 koef_uniq_i[i, 0] = c[i, i];
@@ -252,10 +265,15 @@ namespace nccgle_program
                 koef_svyazi_i[i, 0] = 1 - koef_uniq_i[i, 0];
                 koef_svyazi_obschiy += koef_svyazi_i[i, 0];
             }
-            //собирательная способность
-            int[] t = new int[Constant.DocumentsNumber];
 
-            Matrix p = new Matrix(Constant.DocumentsNumber, 1); // вектор Пи
+            koef_uniq_obschiy = koef_uniq_obschiy / Constant.DocumentsNumber;
+            koef_svyazi_obschiy = koef_svyazi_obschiy / Constant.DocumentsNumber;
+
+            // вектор Пи (собирательная способность каждого документа)
+            Matrix p = new Matrix(Constant.DocumentsNumber, 1);
+
+            // t[i] - для последующего заполнения p. Содержит количество терминов в каждом доке
+            int[] t = new int[Constant.DocumentsNumber];
 
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
@@ -265,199 +283,67 @@ namespace nccgle_program
                 }
                 p[i, 0] = koef_uniq_i[i, 0] * koef_svyazi_i[i, 0] * t[i];
             }
-
-            koef_uniq_obschiy = koef_uniq_obschiy / Constant.DocumentsNumber;
-            koef_svyazi_obschiy = koef_svyazi_obschiy / Constant.DocumentsNumber;
-
-            //DeltaS
-            Matrix bus = new Matrix(Constant.TermsNumber, 1);
-
-            //общий коэфициент уникальности
-            double Bus = 0;
-            //общий коэфициент связи
-            double Fis = 0;
-
-            Matrix fis = new Matrix(Constant.TermsNumber, 1);
-
-            for (int i = 0; i < Constant.TermsNumber; i++)
-            {
-                bus[i, 0] = c_shtrih[i, i];
-                Bus += bus[i, 0];
-                fis[i, 0] = 1 - bus[i, 0];
-                Fis += fis[i, 0];
-            }
-            Bus = Math.Round(Bus / Constant.TermsNumber, Constant.RoundSymbolsCount);
-            Fis = Math.Round(Fis / Constant.TermsNumber, Constant.RoundSymbolsCount);
-
-            //*теоретическое число кластеров*
-            //число кластеров
-            double nuc = 0;
-            for (int i = 0; i < Constant.DocumentsNumber; i++)
-            {
-                nuc += Math.Round(koef_uniq_i[i, 0], Constant.RoundSymbolsCount);
-            }
-
-            //число терминов
-            double nc = Math.Round(Constant.DocumentsNumber / nuc, Constant.RoundSymbolsCount);
-
-            //построение центроидов
-
-            int nuc_ = Convert.ToInt32(nuc);
-
-            //из него делают кластер, если n>6
-            Matrix cent1 = new Matrix(nuc_, 1);
-
-
-            Matrix tmp = new Matrix(p);
-            for (int i = 0; i < nuc_; i++)
-            {
-                double max = tmp[0, 0];
-                int maxIndex = 0;
-                for (int j = 0; j < Constant.DocumentsNumber; j++)
-                {
-                    if (tmp[j, 0] > max)
-                    {
-                        max = tmp[j, 0];
-                        maxIndex = j;
-                    }
-                }
-                cent1[i, 0] = maxIndex;
-                tmp[maxIndex, 0] = -1;
-                maxIndex = 0;
-            }
-
-            #region Gipotyza
-            // вывод только первой половины Дельта S?
-            int n = 0;
-            //..есть предположение ,что их просто мало
-            if (n < 26)
-            {
-            #endregion
-
-                //принадлеж юзать для поиска...
-                int NekaInt = nuc_;    // 6;// так у врагов
-
-                Matrix MaxInRow = new Matrix(Constant.DocumentsNumber, NekaInt);
-                double MaxValue;
-                int MaxNumber;
-
-                for (int i = 0; i < Constant.DocumentsNumber; i++)
-                {
-                    MaxValue = 0;
-                    MaxNumber = 0;
-                    for (int j = 0; j < NekaInt; j++)
-                    {
-                        if (c[(int)cent1[j, 0], i] > MaxValue)
-                        {
-                            MaxValue = c[(int)cent1[j, 0], i];
-                            MaxNumber = j;
-                        }
-                        if (c[(int)cent1[j, 0], i] == MaxValue)
-                        {
-                            if (p[i, 0] > p[MaxNumber, 0])
-                            {
-                                MaxValue = c[(int)cent1[j, 0], i];
-                                MaxNumber = j;
-                            }
-                        }
-                    }
-
-                    for (int k = 0; k < nuc_; k++)
-                    {
-                        if (k == MaxNumber)
-                        {
-                            MaxInRow[i, k] = 1;
-                        }
-                        else
-                        {
-                            MaxInRow[i, k] = 0;
-                        }
-                    }
-                }
-
-                #region центроид и ср                       //26,6
-                Matrix KolInKlaster = new Matrix(d.DimX, nuc_);
-                int[] tempmas = new int[Constant.DocumentsNumber];
-
-                Matrix SrInKlaster = new Matrix(Constant.DocumentsNumber, 1);
-                int iCount;
-                int KolKlaster;
-                double TermDocs;
-                double m;
-
-                for (int i = 0; i < d.DimY; i++)
-                {
-                    TermDocs = 0;
-                    m = 0;
-                    for (int h = 0; h < nuc_; h++)
-                    {
-                        iCount = 0;
-                        KolKlaster = 0;
-                        for (int j = 0; j < d.DimX; j++)
-                        {
-                            if (d[j, i] == 1d)
-                            {
-                                tempmas[iCount] = j;
-                                iCount++;
-                            }
-                        }
-                        for (int r = 0; r < iCount; r++)
-                        {
-                            if (MaxInRow[tempmas[r], h] == 1) KolKlaster++;
-                            tempmas[r] = 0;
-                        }
-                        if (KolKlaster > 0) m++;
-                        KolInKlaster[i, h] = KolKlaster;
-
-                        TermDocs += KolKlaster;
-                    }
-                    SrInKlaster[i, 0] = TermDocs / m;
-                }
-                #endregion
-
-
-                #region G
-                //  G
-                Matrix OneAndZero = new Matrix(d.DimX, nuc_);
-                double NumberOne;
-                double NumberTwo;
-
-
-                for (int i = 0; i < Constant.TermsNumber; i++)
-                {
-                    for (int j = 0; j < nuc_; j++)
-                    {
-                        NumberOne = KolInKlaster[i, j] * bus[i, 0];
-                        NumberTwo = Bus * 0.5 * SrInKlaster[i, 0];
-                        if (NumberOne > NumberTwo) OneAndZero[i, j] = 1;
-                        else OneAndZero[i, j] = 0;
-                    }
-                }
-                #endregion
-
-                ForReturn.TerminsNumber = nc;
-                ForReturn.ClustersNumber = nuc;
-
-
-                ForReturn.Delta = fis;
-                ForReturn.DeltaS = bus;
-
-                ForReturn.KoeficientUniqI = koef_uniq_i;
-                ForReturn.KoeficientSvyaziI = koef_svyazi_i;
-
-                ForReturn.ObschKoeficientUnic = koef_uniq_obschiy;
-                ForReturn.ObschKoeficientSvyazi = koef_svyazi_obschiy;
-
-                ForReturn.OneAndZero = OneAndZero;
-                ForReturn.Pi = p;
-
-                ForReturn.KolInKlaster = KolInKlaster;
-                ForReturn.SrInKlaster = SrInKlaster;
-
-                ForReturn.Clusters = cent1;
-            }
-                return ForReturn;
             
+
+            //Лирика: теперь у нас в векторе Пи есть собирательные способности для каждого из документов. Мы берем из этого вектора nu_c доков - они будут ядрами для кластеров.
+
+            // частные коэфициенты уникальности (для терминов)
+            Matrix koef_uniq_j_shtrih = new Matrix(Constant.DocumentsNumber, 1);
+
+            // общий коэфициент уникальности (со штрихом)
+            double koef_uniq_obschiy_shtrih = 0;
+
+            // частные коэфициенты связи (для терминов)
+            Matrix koef_svyazi_j_shtrih = new Matrix(Constant.DocumentsNumber, 1);
+
+            // общие коэфициент связи (со штрихом)
+            double koef_svyazi_obschiy_shtrih = 0;
+
+            for (int j = 0; j < Constant.TermsNumber; j++)
+            {
+                koef_uniq_j_shtrih[j, 0] = c_shtrih[j, j];
+                koef_uniq_obschiy_shtrih += koef_uniq_j_shtrih[j, 0];
+
+                koef_svyazi_j_shtrih[j, 0] = 1 - koef_uniq_j_shtrih[j, 0];
+                koef_svyazi_obschiy_shtrih += koef_svyazi_j_shtrih[j, 0];
+            }
+
+            koef_uniq_obschiy_shtrih = koef_uniq_obschiy_shtrih / Constant.DocumentsNumber;
+            koef_svyazi_obschiy_shtrih = koef_svyazi_obschiy_shtrih / Constant.DocumentsNumber;
+//---------------------------------------------------------------------------------------------
+            // теоретическое число кластеров
+            double Nu_C = koef_uniq_obschiy * Constant.DocumentsNumber;
+            double Nu_C_tmp = Math.Round(Nu_C);
+            if ((Nu_C - Nu_C_tmp) > 0) // нечеловеческое округление =)
+            {
+                Nu_C = Nu_C_tmp + 1;
+            }
+            else Nu_C = Nu_C_tmp;
+            
+            // число документов в кластере
+            double M_C = Math.Round(1 / koef_uniq_obschiy);
+            double M_C_tmp = Math.Round(M_C);
+            if ((M_C - M_C_tmp) > 0) // нечеловеческое округление =)
+            {
+                M_C = M_C_tmp + 1;
+            }
+            else M_C = M_C_tmp;
+//----------------------------------------------------------------
+
+            ManyMatrixToShow ForReturn = new ManyMatrixToShow();
+            ForReturn.koef_svyazi_i = koef_svyazi_i;
+            ForReturn.koef_svyazi_j_shtrih = koef_svyazi_j_shtrih;
+            ForReturn.koef_svyazi_obschiy = koef_svyazi_obschiy;
+            ForReturn.koef_svyazi_obschiy_shtrih = koef_svyazi_obschiy_shtrih;
+            ForReturn.koef_uniq_i = koef_uniq_i;
+            ForReturn.koef_uniq_j_shtrih = koef_uniq_j_shtrih;
+            ForReturn.koef_uniq_obschiy = koef_uniq_obschiy;
+            ForReturn.koef_uniq_obschiy_shtrih = koef_uniq_obschiy_shtrih;
+            ForReturn.Nu_C = Nu_C;
+            ForReturn.M_C = M_C;
+            ForReturn.p = p;
+
+            return ForReturn;
         }
     }
 }
