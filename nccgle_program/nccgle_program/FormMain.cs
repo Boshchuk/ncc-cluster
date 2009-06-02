@@ -15,8 +15,9 @@ namespace nccgle_program
         Matrix S_Shtrih;
         Matrix C;
         Matrix C_Shtrih;
+        ClusterBase FinalTree;
 
-        ManyMatrixToShow Cooficients;
+        ManyMatrixToShow Coefficients;
 
         public FormMain()
         {
@@ -29,6 +30,7 @@ namespace nccgle_program
             S_Shtrih = new Matrix(Constant.DocumentsNumber, Constant.TermsNumber);
             C = new Matrix(Constant.TermsNumber, Constant.TermsNumber);
             C_Shtrih = new Matrix(Constant.DocumentsNumber, Constant.DocumentsNumber);
+            FinalTree = new ClusterBase();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -40,7 +42,9 @@ namespace nccgle_program
             C = JustDoIt.MultiplyMatrix(JustDoIt.Transposition(S), S_Shtrih);
             C_Shtrih = JustDoIt.MultiplyMatrix(S, JustDoIt.Transposition(S_Shtrih));
 
-            Cooficients = JustDoIt.CalculateCoeff(D, C, S_Shtrih);
+            Coefficients = JustDoIt.CalculateCoeff(D, C, S_Shtrih);
+
+            FinalTree = JustDoIt.ClusterBuilder(D, S, S_Shtrih, C, C_Shtrih, Coefficients);
 
         }
 
@@ -65,27 +69,28 @@ namespace nccgle_program
                     break;
                 
                 case 5:
-                    JustDoIt.RenderMatrix("Коэффициенты связи для документов", resultBrowser, Cooficients.koef_svyazi_i);
+                    JustDoIt.RenderMatrix("Коэффициенты связи для документов", resultBrowser, Coefficients.koef_svyazi_i);
                     break;
                 case 6:
-                    JustDoIt.RenderMatrix("Коэффициент связи общий", resultBrowser, Cooficients.koef_svyazi_obschiy);
+                    JustDoIt.RenderMatrix("Коэффициент связи общий", resultBrowser, Coefficients.koef_svyazi_obschiy);
                     break;
                 case 7:
-                    JustDoIt.RenderMatrix("Коэффициенты уникальности для документов", resultBrowser, Cooficients.koef_uniq_i);
+                    JustDoIt.RenderMatrix("Коэффициенты уникальности для документов", resultBrowser, Coefficients.koef_uniq_i);
                     break;
 
                 case 8:
-                    JustDoIt.RenderMatrix("Коэффициент уникальности общий", resultBrowser, Cooficients.koef_uniq_obschiy);
+                    JustDoIt.RenderMatrix("Коэффициент уникальности общий", resultBrowser, Coefficients.koef_uniq_obschiy);
                     break;
 
                 case 9:
-                    JustDoIt.RenderMatrix("Число кластеров", resultBrowser, Cooficients.Nu_C);
+                    JustDoIt.RenderMatrix("Число кластеров", resultBrowser, Coefficients.Nu_C);
                     break;
 
                 case 10:
-                    JustDoIt.RenderMatrix("Число доков в кластере", resultBrowser, Cooficients.M_C);
+                    JustDoIt.RenderMatrix("Число доков в кластере", resultBrowser, Coefficients.M_C);
                     break;
             }
+            resultBrowser.Select();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -93,11 +98,9 @@ namespace nccgle_program
             Matrix m = new Matrix(15, 1);
             m.FillRandom();
 
-            m.vSort();
+            //List<int> test =  m.vSortAndGetIndexes(3);
 
-            JustDoIt.RenderMatrix("degug", resultBrowser, m);
-
-
+            //JustDoIt.RenderMatrix(test[0].ToString()+" " + test[1].ToString()+" "  + test[2].ToString(), resultBrowser, m);
         }
     }
 }

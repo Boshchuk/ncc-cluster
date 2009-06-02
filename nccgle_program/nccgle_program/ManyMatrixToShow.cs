@@ -59,38 +59,5 @@
         public double M_C;
 
         public Matrix p;
-//---------------------------------------------------------------------
-
-        /// <summary>
-        /// Дэльта
-        /// </summary>
-        //public Matrix Delta;
-
-        /// <summary>
-        /// Дэльта S
-        /// </summary>
-        //public Matrix DeltaS;
-
-        /// <summary>
-        /// Общий коэфициент связи
-        /// </summary>
-        //public double ObschKoeficientSvyazi;
-
-        /// <summary>
-        /// Вектор G
-        /// </summary>  
-        //public Matrix OneAndZero;
-
-        /// <summary>
-        /// Число терминов
-        /// теоретическое
-        /// </summary>
-        //public double TerminsNumber;
-
-        /// <summary>
-        /// Число кластеров
-        /// теоретическое
-        /// </summary>
-        //public double ClustersNumber;
     }
 }

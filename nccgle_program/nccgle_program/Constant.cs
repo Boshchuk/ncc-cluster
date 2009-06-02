@@ -26,5 +26,7 @@ namespace nccgle_program
         /// Округление чисел при выводе их на экран
         /// </summary>
         public static int RoundSymbolsCountInRender = 4;
+
+        public static double alpha = 0.75;
     }
 }
