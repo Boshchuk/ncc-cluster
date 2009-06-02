@@ -272,7 +272,7 @@ namespace nccgle_program
             // вектор Пи (собирательная способность каждого документа)
             Matrix p = new Matrix(Constant.DocumentsNumber, 1);
 
-            // t[i] - для последующего заполнения p. Содержит количество терминов в каждом доке
+            // t[i] - (вспомогательный по сути) для последующего заполнения p. Содержит количество терминов в каждом доке
             int[] t = new int[Constant.DocumentsNumber];
 
             for (int i = 0; i < Constant.DocumentsNumber; i++)
@@ -314,22 +314,21 @@ namespace nccgle_program
             // теоретическое число кластеров
             double Nu_C = koef_uniq_obschiy * Constant.DocumentsNumber;
             double Nu_C_tmp = Math.Round(Nu_C);
-            if ((Nu_C - Nu_C_tmp) > 0) // нечеловеческое округление =)
-            {
-                Nu_C = Nu_C_tmp + 1;
-            }
-            else Nu_C = Nu_C_tmp;
+            //if ((Nu_C - Nu_C_tmp) > 0) // нечеловеческое округление =)
+            //{
+            //    Nu_C = Nu_C_tmp + 1;
+            //}
+            //else Nu_C = Nu_C_tmp;
             
             // число документов в кластере
             double M_C = Math.Round(1 / koef_uniq_obschiy);
             double M_C_tmp = Math.Round(M_C);
-            if ((M_C - M_C_tmp) > 0) // нечеловеческое округление =)
-            {
-                M_C = M_C_tmp + 1;
-            }
-            else M_C = M_C_tmp;
+            //if ((M_C - M_C_tmp) > 0) // нечеловеческое округление =)
+            //{
+            //    M_C = M_C_tmp + 1;
+            //}
+            //else M_C = M_C_tmp;
 //----------------------------------------------------------------
-
             ManyMatrixToShow ForReturn = new ManyMatrixToShow();
             ForReturn.koef_svyazi_i = koef_svyazi_i;
             ForReturn.koef_svyazi_j_shtrih = koef_svyazi_j_shtrih;
@@ -344,6 +343,19 @@ namespace nccgle_program
             ForReturn.p = p;
 
             return ForReturn;
+        }
+
+        public static ClusterBase ClusterBuilder(Matrix d, Matrix s, Matrix s_shtih, Matrix c, Matrix c_shtrih, ManyMatrixToShow coefSet)
+        {
+            ClusterBase cb = new ClusterBase();
+
+            // получаем список из ню_цэ индексов
+            List<int> tmp = coefSet.p.vSortAndGetIndexes((int)coefSet.Nu_C);
+
+            cb.SetKernels(tmp); // создали Nu_C кластеров
+            cb.SortDocs(c);
+
+            return cb;
         }
     }
 }

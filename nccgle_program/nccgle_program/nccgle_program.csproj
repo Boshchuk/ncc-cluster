@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClusterBase.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
