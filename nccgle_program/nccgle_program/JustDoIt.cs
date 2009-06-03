@@ -17,6 +17,8 @@ namespace nccgle_program
         /// </summary>
         public static ToolStripStatusLabel log_bar;
 
+        public static List<string> TermNames;
+
         /// <summary>
         /// Умножение матриц
         /// </summary>
@@ -63,51 +65,6 @@ namespace nccgle_program
                 }
             return result;
         }
-        /// <summary>
-        /// Вывод матрицы
-        /// </summary>
-        /// <param name="message">Текстовое примечание</param>
-        /// <param name="table">Куда выводить</param>
-        /// <param name="m">Что выводить</param>
-        public static void RenderMatrix(string message, WebBrowser table, Matrix m)
-        {
-            int dx = m.DimX;
-            int dy = m.DimY;
-            bool square = (dx == dy);
-
-            string page = "";
-            page += "<p>" + message + "</p>";
-            page += "<table border=1 width=100%>";
-
-            if (dy > 1)
-            {
-                page += "<tr bgcolor=#ccffcc>";
-                for (int i = 0; i < dy + 1; i++)
-                {
-                    page += "<th>"+ i.ToString() + "</th>";
-                }
-            }
-
-            for (int i = 0; i < dx; i++)
-            {
-                if (i % 2 == 0) { page += "<tr>"; }
-                else { page += "<tr bgcolor=#DFDFDF>"; }
-
-                page += "<th bgcolor=#ccffcc>" + (i + 1).ToString() + "</th>";
-                for (int j = 0; j < dy; j++)
-                {
-                    if ((i == j) && square)
-                    {
-                        page += "<td align=center bgcolor=#cccccc>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
-                    }
-                    else page += "<td align=center>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
-                }
-                page += "</tr>";
-            }
-            page += "</table>";
-
-            table.DocumentText = page;
-        }
 
         /// <summary>
         /// Вывод матрицы
@@ -116,11 +73,13 @@ namespace nccgle_program
         /// <param name="table">Куда выводить</param>
         /// <param name="m">Что выводить</param>
         /// <param name="TermNames">Физические имена терминов</param>
-        public static void RenderMatrix(string message, WebBrowser table, Matrix m, List<string> TermNames)
+        public static void RenderMatrix(string message, WebBrowser table, Matrix m)
         {
             int dx = m.DimX;
             int dy = m.DimY;
             bool square = (dx == dy);
+            bool markDocsDY = (dy == Constant.TermsNumber);
+            bool markDocsDX = (dx == Constant.TermsNumber);
 
             string page = "";
             page += "<p>" + message + "</p>";
@@ -131,25 +90,26 @@ namespace nccgle_program
                 page += "<tr bgcolor=#ccffcc>";
                 for (int i = 0; i < dy + 1; i++)
                 {
-                    string text;
-                    text =  (i > 0) ? TermNames[i-1] : ""; // нечеловеческая строчка. рождена в 14:26
-                    page += "<th><a title=" + text + ">" + i.ToString() + "</a></th>";
+                    // нечеловеческий "выворот". рожден в 20:27. Индийцы бы мной гордились :/
+                    page += "<th>";
+                    page += (markDocsDY) ? ("<a title=" + ((i > 0) ? TermNames[i - 1] : "") + ">" + i.ToString() + "</a>") : i.ToString();
+                    page += "</th>";                        
                 }
             }
 
             for (int i = 0; i < dx; i++)
             {
-                if (i % 2 == 0) { page += "<tr>"; }
-                else { page += "<tr bgcolor=#DFDFDF>"; }
+                page += (i % 2 == 0) ? "<tr>" : "<tr bgcolor=#DFDFDF>";
 
-                page += "<th bgcolor=#ccffcc>" + (i + 1).ToString() + "</th>";
+                page += "<th bgcolor=#ccffcc>";
+                page += (markDocsDX) ? ("<a title=" + ((i > 0) ? TermNames[i - 1] : "") + ">" + i.ToString() + "</a>") : i.ToString();
+                page += "</th>";
+
                 for (int j = 0; j < dy; j++)
                 {
-                    if ((i == j) && square)
-                    {
-                        page += "<td align=center bgcolor=#cccccc>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
-                    }
-                    else page += "<td align=center>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
+                    page += "<td align=center";
+                    page += ((i == j) && square) ? " bgcolor=#cccccc>" : ">";
+                    page += Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
                 }
                 page += "</tr>";
             }
@@ -176,22 +136,32 @@ namespace nccgle_program
 
         public static void RenderTree(WebBrowser table, ClusterBase cb)
         {
-            string page = "", body = "";
-            page += "<p>" + body + "</p>";
+            string page = "";
+
+            //int depth = 0; //todo: 
+            foreach (ClusterBase.Cluster item in cb.Tree)
+            {
+                page += "<p>" + item.num + " ";
+                for (int i = 0; i < item.g.DimX; i++)
+                {
+                    page += item.g[i].ToString();
+                }
+                page += "</p>";
+            }
+
             table.DocumentText = page;
         }
 
-        public static List<string> FillTermsName()
-        {
-            List<string> result = new List<string>();
+        public static void FillTermsName()
+        {            
             RichTextBox Slovar = new RichTextBox();
             Slovar.LoadFile(Constant.PathToDictionary);
+            TermNames = new List<string>();
 
             for (int i = 0; i < Constant.TermsNumber; i++)
             {
-                result.Add(Slovar.Lines[i]);
+                TermNames.Add(Slovar.Lines[i]);
             }
-            return result;
         }
 
         /// <summary>
@@ -200,7 +170,8 @@ namespace nccgle_program
         /// </summary>
         /// <param name="m">Ссылка на матрицу для заполнения</param>
         public static void ForMatrixD(Matrix m) // заполнение матрицы D (модели множества документов)
-        {   
+        {
+            FillTermsName();
             RichTextBox Slovar = new RichTextBox();
             RichTextBox Doc = new RichTextBox();
 
@@ -224,11 +195,7 @@ namespace nccgle_program
                         string template = text.Substring(0, current_position);
                         text = text.Remove(0, current_position + 1);
 
-                        if (Doc.Find(template) != -1)
-                        {
-                            m[i, j] = 1;
-                        }
-                        else m[i, j] = 0;
+                        m[i, j] = (Doc.Find(template) != -1) ? 1 : 0;
                     }
                 }
 
@@ -310,31 +277,31 @@ namespace nccgle_program
         public static ManyMatrixToShow CalculateCoeff(Matrix d, Matrix c, Matrix c_shtrih)
         {
             // частные коэфициенты уникальности (для документов)
-            Matrix koef_uniq_i = new Matrix(Constant.DocumentsNumber, 1);
+            Matrix koef_uniq_i = new Matrix(Constant.DocumentsNumber);
 
             // общий коэфициент уникальности 
             double koef_uniq_obschiy = 0;
 
             // частные коэфициенты связи (для документов)
-            Matrix koef_svyazi_i = new Matrix(Constant.DocumentsNumber, 1);
+            Matrix koef_svyazi_i = new Matrix(Constant.DocumentsNumber);
 
             // общие коэфициент связи
             double koef_svyazi_obschiy = 0;
             
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
-                koef_uniq_i[i, 0] = c[i, i];
-                koef_uniq_obschiy += koef_uniq_i[i, 0];
+                koef_uniq_i[i] = c[i, i];
+                koef_uniq_obschiy += koef_uniq_i[i];
 
-                koef_svyazi_i[i, 0] = 1 - koef_uniq_i[i, 0];
-                koef_svyazi_obschiy += koef_svyazi_i[i, 0];
+                koef_svyazi_i[i] = 1 - koef_uniq_i[i];
+                koef_svyazi_obschiy += koef_svyazi_i[i];
             }
 
             koef_uniq_obschiy = koef_uniq_obschiy / Constant.DocumentsNumber;
             koef_svyazi_obschiy = koef_svyazi_obschiy / Constant.DocumentsNumber;
 
             // вектор Пи (собирательная способность каждого документа)
-            Matrix p = new Matrix(Constant.DocumentsNumber, 1);
+            Matrix p = new Matrix(Constant.DocumentsNumber);
 
             // t[i] - (вспомогательный по сути) для последующего заполнения p. Содержит количество терминов в каждом доке
             int[] t = new int[Constant.DocumentsNumber];
@@ -345,20 +312,20 @@ namespace nccgle_program
                 {
                     t[i] += (int)d[i, j];
                 }
-                p[i, 0] = koef_uniq_i[i, 0] * koef_svyazi_i[i, 0] * t[i];
+                p[i] = koef_uniq_i[i] * koef_svyazi_i[i] * t[i];
             }
             
 
             //Лирика: теперь у нас в векторе Пи есть собирательные способности для каждого из документов. Мы берем из этого вектора nu_c доков - они будут ядрами для кластеров.
 
             // частные коэфициенты уникальности (для терминов)
-            Matrix koef_uniq_j_shtrih = new Matrix(Constant.TermsNumber, 1);
+            Matrix koef_uniq_j_shtrih = new Matrix(Constant.TermsNumber);
 
             // общий коэфициент уникальности (со штрихом)
             double koef_uniq_obschiy_shtrih = 0;
 
             // частные коэфициенты связи (для терминов)
-            Matrix koef_svyazi_j_shtrih = new Matrix(Constant.TermsNumber, 1);
+            Matrix koef_svyazi_j_shtrih = new Matrix(Constant.TermsNumber);
 
             // общие коэфициент связи (со штрихом)
             double koef_svyazi_obschiy_shtrih = 0;
@@ -366,10 +333,10 @@ namespace nccgle_program
             for (int j = 0; j < Constant.TermsNumber; j++)
             {
                 koef_uniq_j_shtrih[j, 0] = c_shtrih[j, j];
-                koef_uniq_obschiy_shtrih += koef_uniq_j_shtrih[j, 0];
+                koef_uniq_obschiy_shtrih += koef_uniq_j_shtrih[j];
 
-                koef_svyazi_j_shtrih[j, 0] = 1 - koef_uniq_j_shtrih[j, 0];
-                koef_svyazi_obschiy_shtrih += koef_svyazi_j_shtrih[j, 0];
+                koef_svyazi_j_shtrih[j, 0] = 1 - koef_uniq_j_shtrih[j];
+                koef_svyazi_obschiy_shtrih += koef_svyazi_j_shtrih[j];
             }
 
             koef_uniq_obschiy_shtrih = koef_uniq_obschiy_shtrih / Constant.TermsNumber;

@@ -10,7 +10,6 @@ namespace nccgle_program
 {
     public partial class FormMain : Form
     {
-        public List<string> TermNames = new List<string>();
         Matrix D;
         Matrix S;
         Matrix S_Shtrih;
@@ -23,10 +22,9 @@ namespace nccgle_program
         public FormMain()
         {
             InitializeComponent();
+            comboBox1.Enabled = false;
             JustDoIt.progress = (ToolStripProgressBar)statusStrip.Items["toolStripProgressBar"];
             JustDoIt.log_bar = (ToolStripStatusLabel)statusStrip.Items["toolStripStatusLabel"];
-
-            TermNames = JustDoIt.FillTermsName();
 
             D = new Matrix(Constant.DocumentsNumber, Constant.TermsNumber);
             S = new Matrix(Constant.DocumentsNumber, Constant.TermsNumber);
@@ -49,6 +47,8 @@ namespace nccgle_program
 
             FinalTree = JustDoIt.ClusterBuilder(D, S, S_Shtrih, C, C_Shtrih, Coefficients);
 
+            comboBox1.Enabled = true;
+
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -56,7 +56,7 @@ namespace nccgle_program
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
-                    JustDoIt.RenderMatrix("Матрица D<br>Горизонталь - термины \\ вертикаль - документы", resultBrowser, D, TermNames);
+                    JustDoIt.RenderMatrix("Матрица D<br>Горизонталь - термины \\ вертикаль - документы", resultBrowser, D);
                     break;
                 case 1:
                     JustDoIt.RenderMatrix("Матрица S", resultBrowser, S);
@@ -92,18 +92,12 @@ namespace nccgle_program
                 case 10:
                     JustDoIt.RenderMatrix("Число доков в кластере", resultBrowser, Coefficients.M_C);
                     break;
+
+                case 11:
+                    JustDoIt.RenderTree(resultBrowser, FinalTree);
+                    break;
             }
             resultBrowser.Select();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Matrix m = new Matrix(15, 1);
-            m.FillRandom();
-
-            //List<int> test =  m.vSortAndGetIndexes(3);
-
-            //JustDoIt.RenderMatrix(test[0].ToString()+" " + test[1].ToString()+" "  + test[2].ToString(), resultBrowser, m);
         }
     }
 }

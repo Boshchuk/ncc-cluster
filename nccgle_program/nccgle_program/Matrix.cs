@@ -28,6 +28,53 @@ namespace nccgle_program
             this.dimY = dimY;
         }
 
+
+        /// <summary>
+        /// Конструктор для вектора
+        /// </summary>
+        /// <param name="dimX">Размерность вектора (больше 1)</param>
+        public Matrix(int dimX)
+        {
+            body = new Double[dimX, 1];
+            this.dimX = dimX;
+            this.dimY = 1;
+        }
+
+        /// <summary>
+        /// Индесатор для вектора
+        /// </summary>
+        /// <param name="x">Позиция к которой происходит обращение. Индексация с 0</param>
+        /// <returns>Значение в указанной позиции</returns>
+        public double this[int x]
+        {
+            get
+            {
+                if (dimY == 1)
+                {
+                    return this[x, 0];
+                }
+                else
+                    throw new ArgumentException("вообще-то это не вектор...");
+            }
+
+            set
+            {
+                if (dimY == 1)
+                {
+                    if ((x >= 0) && (x < dimX))
+                    {
+                        this.body[x, 0] = (double)value;
+                    }
+                    else
+                    {
+                        throw new IndexOutOfRangeException();
+                    }
+                }
+                else
+                    throw new ArgumentException("вообще-то это не вектор..."); 
+            }
+        }
+
         /// <summary>
         /// Индексатор для прохождения по элементам матрицы
         /// </summary>
@@ -97,7 +144,7 @@ namespace nccgle_program
 
             for (int i = 0; i < dimX; i++)
             {
-                body[i, 0] = (double)ht.GetKey(i);
+                body[i,0] = (double)ht.GetKey(i);
             }
         }
 
