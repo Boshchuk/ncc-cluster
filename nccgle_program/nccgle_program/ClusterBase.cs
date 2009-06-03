@@ -22,7 +22,7 @@ namespace nccgle_program
             /// <summary>
             /// Обобщенный образ документов, содержащихся в кластере (он же центроид)
             /// </summary>
-            public Matrix g = new Matrix(Constant.TermsNumber, 1);
+            public Matrix g;
         }
         /// <summary>
         /// Множество всех документов
@@ -54,7 +54,7 @@ namespace nccgle_program
                 Cluster item = new Cluster();
                 item.num = kerr[i];
                 item.docs = new List<int>();
-                item.g = new Matrix(Constant.TermsNumber, 1);
+                item.g = new Matrix(Constant.TermsNumber);
                 Tree.Add(item);
 
                 allDocs.Remove(kerr[i]); // убираем доки из общего множества
@@ -100,11 +100,11 @@ namespace nccgle_program
                 for (int i = 0; i < Constant.TermsNumber; i++) // смысл цикла: сформировать g_i
                 {
                     int f = 0; // количество вхождений i-го термина в документы кластера
-                    foreach (int j in item.docs)
+                    foreach (int doc_num in item.docs)
                     {
-                        if (d[i, j] == 1) f++; // j в понятиях конспекта i
+                        if (d[doc_num, i] == 1) f++;
                     }
-                    double left_part = f * coef.koef_uniq_j_shtrih[i, 0];
+                    double left_part = f * coef.koef_uniq_j_shtrih[i];
                     // левая часть посчитана.
 
                     // считаем f_avg
@@ -113,14 +113,14 @@ namespace nccgle_program
                     {
                         foreach (int j in item_tmp.docs)
                         {
-                            if (d[i, j] == 1) m++;
+                            if (d[j, i] == 1) m++;
                             break;
                         }
                     }
                     double f_avg = (m != 0) ? f / m : 0;
                     double right_part = f_avg * coef.koef_uniq_obschiy_shtrih * Constant.alpha;
 
-                    item.g[i, 0] = left_part > right_part ? 1 : 0;
+                    item.g[i] = left_part > right_part ? 1 : 0;
                 }
                 
             }
