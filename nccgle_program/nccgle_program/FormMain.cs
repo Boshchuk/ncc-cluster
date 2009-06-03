@@ -56,7 +56,7 @@ namespace nccgle_program
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
-                    JustDoIt.RenderMatrix("Матрица D<br>Горизонталь - термины \\ вертикаль - документы", resultBrowser, D);
+                    JustDoIt.RenderMatrix("Матрица D<br>Горизонталь - термины \\ вертикаль - документы", resultBrowser, D, TermNames);
                     break;
                 case 1:
                     JustDoIt.RenderMatrix("Матрица S", resultBrowser, S);

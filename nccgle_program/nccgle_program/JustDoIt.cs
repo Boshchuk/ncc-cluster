@@ -131,7 +131,9 @@ namespace nccgle_program
                 page += "<tr bgcolor=#ccffcc>";
                 for (int i = 0; i < dy + 1; i++)
                 {
-                    page += "<th><a title=" + TermNames[i] + ">" + i.ToString() + "</a></th>";
+                    string text;
+                    text =  (i > 0) ? TermNames[i-1] : ""; // нечеловеческая строчка. рождена в 14:26
+                    page += "<th><a title=" + text + ">" + i.ToString() + "</a></th>";
                 }
             }
 
@@ -172,6 +174,13 @@ namespace nccgle_program
             table.DocumentText = page;
         }
 
+        public static void RenderTree(WebBrowser table, ClusterBase cb)
+        {
+            string page = "", body = "";
+            page += "<p>" + body + "</p>";
+            table.DocumentText = page;
+        }
+
         public static List<string> FillTermsName()
         {
             List<string> result = new List<string>();
@@ -180,7 +189,7 @@ namespace nccgle_program
 
             for (int i = 0; i < Constant.TermsNumber; i++)
             {
-                result.Add(Slovar[i]);
+                result.Add(Slovar.Lines[i]);
             }
             return result;
         }
@@ -235,14 +244,10 @@ namespace nccgle_program
         //private static string ChoseFile()
         //{
         //    OpenFileDialog dialog = new OpenFileDialog();
-
         //    dialog.InitialDirectory = Application.ExecutablePath;
-
         //    dialog.Filter = "rtf files only(*.rtf)|*.rtf";
         //    dialog.ShowDialog();
-
         //    return (dialog.FileName);
-
         //}
 
         /// <summary>
@@ -347,13 +352,13 @@ namespace nccgle_program
             //Лирика: теперь у нас в векторе Пи есть собирательные способности для каждого из документов. Мы берем из этого вектора nu_c доков - они будут ядрами для кластеров.
 
             // частные коэфициенты уникальности (для терминов)
-            Matrix koef_uniq_j_shtrih = new Matrix(Constant.DocumentsNumber, 1);
+            Matrix koef_uniq_j_shtrih = new Matrix(Constant.TermsNumber, 1);
 
             // общий коэфициент уникальности (со штрихом)
             double koef_uniq_obschiy_shtrih = 0;
 
             // частные коэфициенты связи (для терминов)
-            Matrix koef_svyazi_j_shtrih = new Matrix(Constant.DocumentsNumber, 1);
+            Matrix koef_svyazi_j_shtrih = new Matrix(Constant.TermsNumber, 1);
 
             // общие коэфициент связи (со штрихом)
             double koef_svyazi_obschiy_shtrih = 0;
@@ -367,26 +372,19 @@ namespace nccgle_program
                 koef_svyazi_obschiy_shtrih += koef_svyazi_j_shtrih[j, 0];
             }
 
-            koef_uniq_obschiy_shtrih = koef_uniq_obschiy_shtrih / Constant.DocumentsNumber;
-            koef_svyazi_obschiy_shtrih = koef_svyazi_obschiy_shtrih / Constant.DocumentsNumber;
+            koef_uniq_obschiy_shtrih = koef_uniq_obschiy_shtrih / Constant.TermsNumber;
+            koef_svyazi_obschiy_shtrih = koef_svyazi_obschiy_shtrih / Constant.TermsNumber;
 //---------------------------------------------------------------------------------------------
             // теоретическое число кластеров
             double Nu_C = koef_uniq_obschiy * Constant.DocumentsNumber;
-            double Nu_C_tmp = Math.Round(Nu_C);
-            //if ((Nu_C - Nu_C_tmp) > 0) // нечеловеческое округление =)
-            //{
-            //    Nu_C = Nu_C_tmp + 1;
-            //}
-            //else Nu_C = Nu_C_tmp;
+            //double Nu_C_tmp = Math.Round(Nu_C);
+            //Nu_C = (Nu_C - Nu_C_tmp) > 0 ? Nu_C_tmp + 1 : Nu_C_tmp;
             
             // число документов в кластере
             double M_C = Math.Round(1 / koef_uniq_obschiy);
-            double M_C_tmp = Math.Round(M_C);
-            //if ((M_C - M_C_tmp) > 0) // нечеловеческое округление =)
-            //{
-            //    M_C = M_C_tmp + 1;
-            //}
-            //else M_C = M_C_tmp;
+            //double M_C_tmp = Math.Round(M_C);
+            //M_C = (M_C - M_C_tmp) > 0 ? M_C_tmp + 1 : M_C_tmp;
+
 //----------------------------------------------------------------
             ManyMatrixToShow ForReturn = new ManyMatrixToShow();
             ForReturn.koef_svyazi_i = koef_svyazi_i;
@@ -413,6 +411,7 @@ namespace nccgle_program
 
             cb.SetKernels(tmp); // создали Nu_C кластеров
             cb.SortDocs(c);
+            cb.BuildCentroid(d, c_shtrih, coefSet);
 
             return cb;
         }
