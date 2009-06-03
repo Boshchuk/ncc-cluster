@@ -10,6 +10,7 @@ namespace nccgle_program
 {
     public partial class FormMain : Form
     {
+        public List<string> TermNames = new List<string>();
         Matrix D;
         Matrix S;
         Matrix S_Shtrih;
@@ -24,6 +25,8 @@ namespace nccgle_program
             InitializeComponent();
             JustDoIt.progress = (ToolStripProgressBar)statusStrip.Items["toolStripProgressBar"];
             JustDoIt.log_bar = (ToolStripStatusLabel)statusStrip.Items["toolStripStatusLabel"];
+
+            TermNames = JustDoIt.FillTermsName();
 
             D = new Matrix(Constant.DocumentsNumber, Constant.TermsNumber);
             S = new Matrix(Constant.DocumentsNumber, Constant.TermsNumber);

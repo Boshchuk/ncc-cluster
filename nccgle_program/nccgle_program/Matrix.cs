@@ -14,9 +14,6 @@ namespace nccgle_program
     {
         private int dimX, dimY;
         private double[,] body;
-
-
-
         /// <summary>
         ///  онструктор
         /// dimX - размерность х
@@ -81,7 +78,6 @@ namespace nccgle_program
             }
         }
 
-
         /// <summary>
         /// —ортирует по возрастанию вектор
         /// </summary>
@@ -104,7 +100,6 @@ namespace nccgle_program
                 body[i, 0] = (double)ht.GetKey(i);
             }
         }
-
 
         /// <summary>
         /// —ортирует массив1 и возвращает массив2 индексов из исходного массива1 дл€ уже упор€доченных элементов
@@ -164,7 +159,6 @@ namespace nccgle_program
                 return null;
             }
         }
-
 
         /// <summary>
         /// «аполн€ет матрицу нулевыми значени€ми

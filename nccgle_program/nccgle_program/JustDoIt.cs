@@ -84,7 +84,54 @@ namespace nccgle_program
                 page += "<tr bgcolor=#ccffcc>";
                 for (int i = 0; i < dy + 1; i++)
                 {
-                    page += "<th>" + i.ToString() + "</th>";
+                    page += "<th>"+ i.ToString() + "</th>";
+                }
+            }
+
+            for (int i = 0; i < dx; i++)
+            {
+                if (i % 2 == 0) { page += "<tr>"; }
+                else { page += "<tr bgcolor=#DFDFDF>"; }
+
+                page += "<th bgcolor=#ccffcc>" + (i + 1).ToString() + "</th>";
+                for (int j = 0; j < dy; j++)
+                {
+                    if ((i == j) && square)
+                    {
+                        page += "<td align=center bgcolor=#cccccc>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
+                    }
+                    else page += "<td align=center>" + Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
+                }
+                page += "</tr>";
+            }
+            page += "</table>";
+
+            table.DocumentText = page;
+        }
+
+        /// <summary>
+        /// Вывод матрицы
+        /// </summary>
+        /// <param name="message">Текстовое примечание</param>
+        /// <param name="table">Куда выводить</param>
+        /// <param name="m">Что выводить</param>
+        /// <param name="TermNames">Физические имена терминов</param>
+        public static void RenderMatrix(string message, WebBrowser table, Matrix m, List<string> TermNames)
+        {
+            int dx = m.DimX;
+            int dy = m.DimY;
+            bool square = (dx == dy);
+
+            string page = "";
+            page += "<p>" + message + "</p>";
+            page += "<table border=1 width=100%>";
+
+            if (dy > 1)
+            {
+                page += "<tr bgcolor=#ccffcc>";
+                for (int i = 0; i < dy + 1; i++)
+                {
+                    page += "<th><a title=" + TermNames[i] + ">" + i.ToString() + "</a></th>";
                 }
             }
 
@@ -123,7 +170,20 @@ namespace nccgle_program
             page += "</tr>";
             page += "</table>";
             table.DocumentText = page;
-        } 
+        }
+
+        public static List<string> FillTermsName()
+        {
+            List<string> result = new List<string>();
+            RichTextBox Slovar = new RichTextBox();
+            Slovar.LoadFile(Constant.PathToDictionary);
+
+            for (int i = 0; i < Constant.TermsNumber; i++)
+            {
+                result.Add(Slovar[i]);
+            }
+            return result;
+        }
 
         /// <summary>
         /// Вызов метода заполнения матрицы D
@@ -184,7 +244,6 @@ namespace nccgle_program
         //    return (dialog.FileName);
 
         //}
-
 
         /// <summary>
         /// Заполнение таблицы значимости терминов для каждого документа
