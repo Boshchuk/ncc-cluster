@@ -22,7 +22,7 @@ namespace nccgle_program
             /// <summary>
             /// Обобщенный образ документов, содержащихся в кластере (он же центроид)
             /// </summary>
-            public Matrix g;
+            public Matrix g = new Matrix(Constant.TermsNumber, 1);
         }
         /// <summary>
         /// Множество всех документов
@@ -95,20 +95,34 @@ namespace nccgle_program
 
         public void BuildCentroid(Matrix d, Matrix c_shtrih, ManyMatrixToShow coef)
         {
-            foreach (Cluster item in Tree)
+            foreach (Cluster item in Tree) // смысл цикла: построить центроиды для каждого кластера
             {
-                for (int t = 0; t < Constant.TermsNumber; t++) // проходим по всему списку терминов
+                for (int i = 0; i < Constant.TermsNumber; i++) // смысл цикла: сформировать g_i
                 {
-                    int f=0; // количество вхождений термина в документы кластера
-                    foreach (int doc_cluster_number in item.docs)
+                    int f = 0; // количество вхождений i-го термина в документы кластера
+                    foreach (int j in item.docs)
                     {
-                        if (d[t,doc_cluster_number] == 1) f++;
+                        if (d[i, j] == 1) f++; // j в понятиях конспекта i
                     }
+                    double left_part = f * coef.koef_uniq_j_shtrih[i, 0];
+                    // левая часть посчитана.
 
-                    //for (int i = 0; i < item.docs.Count; i++)
-                    //if (
-                    //item.g[i,1] = 
+                    // считаем f_avg
+                    int m=0;
+                    foreach (Cluster item_tmp in Tree)
+                    {
+                        foreach (int j in item_tmp.docs)
+                        {
+                            if (d[i, j] == 1) m++;
+                            break;
+                        }
+                    }
+                    double f_avg = (m != 0) ? f / m : 0;
+                    double right_part = f_avg * coef.koef_uniq_obschiy_shtrih * Constant.alpha;
+
+                    item.g[i, 0] = left_part > right_part ? 1 : 0;
                 }
+                
             }
         }
     }
