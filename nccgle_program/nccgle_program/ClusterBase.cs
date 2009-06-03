@@ -5,17 +5,37 @@ using System.Text;
 namespace nccgle_program
 {
     public class ClusterBase
-    {
+    {   
+        /// <summary>
+        /// Элемент дерева кластеров (он же кластер)
+        /// </summary>
         public struct Cluster
         {
+            /// <summary>
+            /// Документ (номер документа), являющегося ядром кластера
+            /// </summary>
             public int num;
+            /// <summary>
+            /// Список документов, включенных в кластер
+            /// </summary>
             public List<int> docs;
+            /// <summary>
+            /// Обобщенный образ документов, содержащихся в кластере (он же центроид)
+            /// </summary>
             public Matrix g;
         }
-
+        /// <summary>
+        /// Множество всех документов
+        /// </summary>
         public List<int> allDocs = new List<int>();
+        /// <summary>
+        /// Дерево кластеров
+        /// </summary>
         public List<Cluster> Tree = new List<Cluster>();
 
+        /// <summary>
+        /// Выделяет кластера и их ядра, группирует документы по кластерам, создает дерево кластеров.
+        /// </summary>
         public ClusterBase()
         {
             for (int i = 0; i < Constant.DocumentsNumber; i++)
@@ -23,7 +43,10 @@ namespace nccgle_program
                 allDocs.Add(i); // создаем коллекцию из всех доков
             }
         }
-
+        /// <summary>
+        /// Из общего числа документов выделяем ядра для кластеров
+        /// </summary>
+        /// <param name="kerr">Множество всех документов (их номеров)</param>
         public void SetKernels(List<int> kerr)
         {
             for (int i = 0; i < kerr.Count; i++)
@@ -37,7 +60,10 @@ namespace nccgle_program
                 allDocs.Remove(kerr[i]); // убираем доки из общего множества
             }
         }
-
+        /// <summary>
+        /// Распределяем документы по кластерам
+        /// </summary>
+        /// <param name="c"></param>
         public void SortDocs(Matrix c)
         {
             foreach (int doc in allDocs) // для каждого дока из оставшихся делаем:
@@ -71,17 +97,17 @@ namespace nccgle_program
         {
             foreach (Cluster item in Tree)
             {
-                for (int t = 0; t < Constant.TermsNumber; t++) // по всему списку терминов
+                for (int t = 0; t < Constant.TermsNumber; t++) // проходим по всему списку терминов
                 {
-                    int f; // количество вхождений термина в документы кластера
-                    foreach (int doc in item.docs)
+                    int f=0; // количество вхождений термина в документы кластера
+                    foreach (int doc_cluster_number in item.docs)
                     {
-                        if (d[t,doc] == 1) f++;
+                        if (d[t,doc_cluster_number] == 1) f++;
                     }
 
-                    for (int i = 0; i < item.docs.Count; i++)
-                    if (
-                    item.g[i,1] = 
+                    //for (int i = 0; i < item.docs.Count; i++)
+                    //if (
+                    //item.g[i,1] = 
                 }
             }
         }
