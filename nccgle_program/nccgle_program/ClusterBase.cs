@@ -120,7 +120,7 @@ namespace nccgle_program
                     double f_avg = (m != 0) ? f / m : 0;
                     double right_part = f_avg * coef.koef_uniq_obschiy_shtrih * Constant.alpha;
 
-                    item.g[i] = left_part > right_part ? 1 : 0;
+                    item.g[i] = left_part > right_part ? 1 : 0;                    
                 }
                 
             }
