@@ -54,6 +54,7 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="GlobalControls.cs" />
     <Compile Include="JustDoIt.cs" />
     <Compile Include="ManyMatrixToShow.cs" />
     <Compile Include="Matrix.cs" />

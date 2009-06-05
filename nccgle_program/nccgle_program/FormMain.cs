@@ -23,10 +23,10 @@ namespace nccgle_program
         {
             InitializeComponent();
             comboBox1.Enabled = false;
-            DebugConsole.screen = textBox1;
-            Render.SetOutput(resultBrowser);
-            JustDoIt.progress = (ToolStripProgressBar)statusStrip.Items["toolStripProgressBar"];
-            JustDoIt.log_bar = (ToolStripStatusLabel)statusStrip.Items["toolStripStatusLabel"];
+
+            GlobalControls.debugOutputScreen = textBox1;
+            GlobalControls.progress = (ToolStripProgressBar)statusStrip.Items["toolStripProgressBar"];
+            GlobalControls.log_bar = (ToolStripStatusLabel)statusStrip.Items["toolStripStatusLabel"];
 
             D = new Matrix(Constant.DocumentsNumber, Constant.TermsNumber);
             S = new Matrix(Constant.DocumentsNumber, Constant.TermsNumber);
