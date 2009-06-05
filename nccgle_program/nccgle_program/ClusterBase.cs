@@ -97,14 +97,17 @@ namespace nccgle_program
         {
             foreach (Cluster item in Tree) // смысл цикла: построить центроиды для каждого кластера
             {
+                DebugConsole.Print("Кластер:", item.num);
                 for (int i = 0; i < Constant.TermsNumber; i++) // смысл цикла: сформировать g_i
                 {
+                    DebugConsole.Print("Элемент", i);
                     int f = 0; // количество вхождений i-го термина в документы кластера
                     foreach (int doc_num in item.docs)
                     {
                         if (d[doc_num, i] == 1) f++;
                     }
                     double left_part = f * coef.koef_uniq_j_shtrih[i];
+                    DebugConsole.Print("left_part",left_part);
                     // левая часть посчитана.
 
                     // считаем f_avg
@@ -119,6 +122,8 @@ namespace nccgle_program
                     }
                     double f_avg = (m != 0) ? f / m : 0;
                     double right_part = f_avg * coef.koef_uniq_obschiy_shtrih * Constant.alpha;
+                    DebugConsole.Print("f_avg", f_avg);
+                    DebugConsole.Print("right_part", right_part);
 
                     item.g[i] = left_part > right_part ? 1 : 0;                    
                 }

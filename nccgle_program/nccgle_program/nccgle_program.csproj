@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ClusterBase.cs" />
     <Compile Include="Constant.cs" />
+    <Compile Include="DebugConsole.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
