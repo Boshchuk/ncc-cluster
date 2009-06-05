@@ -7,13 +7,37 @@ using System.Collections;
 namespace nccgle_program
 {
     /// <summary>
-    /// Инкапсулирует двумерную матрицу элементов типа double
+    /// Инкапсулирует двухмерную матрицу элементов типа double
     /// тут еще рекламы надо записать
     /// </summary>
     public class Matrix
     {
+        /// <summary>
+        /// размерность матрицы
+        /// </summary>
         private int dimX, dimY;
+
+        /// <summary>
+        /// собственно тело матрицы
+        /// </summary>
         private double[,] body;
+
+        private string comment;
+        /// <summary>
+        /// Пояснительный текст. Используется при выводе матрицы.
+        /// </summary>
+        public string Comment
+        {
+            set
+            {
+                comment = value;
+            }
+            get
+            {
+                return comment;
+            }
+        }
+
         /// <summary>
         /// Конструктор
         /// dimX - размерность х
@@ -27,7 +51,6 @@ namespace nccgle_program
             this.dimX = dimX;
             this.dimY = dimY;
         }
-
 
         /// <summary>
         /// Конструктор для вектора
