@@ -7,7 +7,6 @@ namespace nccgle_program
 {
     public static class Render
     {
-        private static WebBrowser table;
         private static List<Matrix> renderList = new List<Matrix>();
 
         /// <summary>
@@ -36,7 +35,7 @@ namespace nccgle_program
                 {
                     // нечеловеческий "выворот". рожден в 20:27. Индийцы бы мной гордились :/
                     page += "<th>";
-                    page += (markDocsDY) ? ("<a title=" + ((i > 0) ? JustDoIt.TermNames[i - 1] : "") + ">" + i.ToString() + "</a>") : i.ToString();
+                    page += (markDocsDY) ? ("<a title=" + ((i > 0) ? GlobalControls.TermNames[i - 1] : "") + ">" + i.ToString() + "</a>") : i.ToString();
                     page += "</th>";
                 }
             }
@@ -46,7 +45,7 @@ namespace nccgle_program
                 page += (i % 2 == 0) ? "<tr>" : "<tr bgcolor=#DFDFDF>";
 
                 page += "<th bgcolor=#ccffcc>";
-                page += (markDocsDX) ? ("<a title=" + JustDoIt.TermNames[i] + ">" + (i + 1).ToString() + "</a>") : (i + 1).ToString();
+                page += (markDocsDX) ? ("<a title=" + GlobalControls.TermNames[i] + ">" + (i + 1).ToString() + "</a>") : (i + 1).ToString();
                 page += "</th>";
 
                 for (int j = 0; j < dy; j++)
@@ -62,11 +61,6 @@ namespace nccgle_program
             return page;
         }
 
-        public static void SetOutput(WebBrowser wb)
-        {
-            table = wb;
-        }
-
         public static void AddToRenderList(Matrix m)
         {
             renderList.Add(m);
@@ -79,24 +73,19 @@ namespace nccgle_program
 
         public static void DoOne(Matrix m)
         {
-            if (table != null)
-            {
-                table.DocumentText = RenderMatrix(m);
-            }
-            else
-                MessageBox.Show("wb = null");
+            GlobalControls.table.DocumentText = RenderMatrix(m);
         }
 
         public static void DoList()
         {
-            if (table != null)
+            if (GlobalControls.table != null)
             {
                 string res = "";
                 foreach (Matrix item in renderList)
                 {
                     res += RenderMatrix(item);
                 }
-                table.DocumentText = res;
+                GlobalControls.table.DocumentText = res;
                 renderList.Clear();
             }
             else

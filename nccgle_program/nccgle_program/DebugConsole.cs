@@ -10,13 +10,11 @@ namespace nccgle_program
     /// </summary>
     public static class DebugConsole
     {
-        public static TextBox screen;
-
         public static void Print(string message)
         {
-            if (screen != null)
+            if (GlobalControls.debugOutputScreen != null)
             {
-                screen.AppendText(message + '\r' + '\n');
+                GlobalControls.debugOutputScreen.AppendText(message + '\r' + '\n');
             }
             else
                 MessageBox.Show("Не указана ссылка на объект для вывода");

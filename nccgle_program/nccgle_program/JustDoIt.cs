@@ -8,16 +8,6 @@ namespace nccgle_program
 {
     public static class JustDoIt
     {
-        /// <summary>
-        /// Прогресс бар
-        /// </summary>
-        public static ToolStripProgressBar progress;
-        /// <summary>
-        /// Вроде статус бар...
-        /// </summary>
-        public static ToolStripStatusLabel log_bar;
-
-        public static List<string> TermNames;
 
         /// <summary>
         /// Умножение матриц
@@ -67,57 +57,6 @@ namespace nccgle_program
         }
 
         /// <summary>
-        /// Вывод матрицы
-        /// </summary>
-        /// <param name="message">Текстовое примечание</param>
-        /// <param name="table">Куда выводить</param>
-        /// <param name="m">Что выводить</param>
-        /// <param name="TermNames">Физические имена терминов</param>
-        public static void RenderMatrix(string message, WebBrowser table, Matrix m)
-        {
-            int dx = m.DimX;
-            int dy = m.DimY;
-            bool square = (dx == dy);
-            bool markDocsDY = (dy == Constant.TermsNumber);
-            bool markDocsDX = (dx == Constant.TermsNumber);
-
-            string page = "";
-            page += "<p>" + message + "</p>";
-            page += "<table border=1 width=100%>";
-
-            if (dy > 1)
-            {
-                page += "<tr bgcolor=#ccffcc>";
-                for (int i = 0; i < dy + 1; i++)
-                {
-                    // нечеловеческий "выворот". рожден в 20:27. Индийцы бы мной гордились :/
-                    page += "<th>";
-                    page += (markDocsDY) ? ("<a title=" + ((i > 0) ? TermNames[i - 1] : "") + ">" + i.ToString() + "</a>") : i.ToString();
-                    page += "</th>";                        
-                }
-            }
-
-            for (int i = 0; i < dx; i++)
-            {
-                page += (i % 2 == 0) ? "<tr>" : "<tr bgcolor=#DFDFDF>";
-
-                page += "<th bgcolor=#ccffcc>";
-                page += (markDocsDX) ? ("<a title=" + TermNames[i] + ">" + (i+1).ToString() + "</a>") : (i+1).ToString();
-                page += "</th>";
-
-                for (int j = 0; j < dy; j++)
-                {
-                    page += "<td align=center";
-                    page += ((i == j) && square) ? " bgcolor=#cccccc>" : ">";
-                    page += Math.Round(m[i, j], Constant.RoundSymbolsCountInRender) + "</td>";
-                }
-                page += "</tr>";
-            }
-            page += "</table>";
-
-            table.DocumentText = page;
-        }
-        /// <summary>
         /// Вывод единственного элемента
         /// </summary>
         /// <param name="message">Текстовое примечание</param>
@@ -156,11 +95,11 @@ namespace nccgle_program
         {            
             RichTextBox Slovar = new RichTextBox();
             Slovar.LoadFile(Constant.PathToDictionary);
-            TermNames = new List<string>();
+            GlobalControls.TermNames = new List<string>();
 
             for (int i = 0; i < Constant.TermsNumber; i++)
             {
-                TermNames.Add(Slovar.Lines[i]);
+                GlobalControls.TermNames.Add(Slovar.Lines[i]);
             }
         }
 
@@ -175,9 +114,9 @@ namespace nccgle_program
             RichTextBox Slovar = new RichTextBox();
             RichTextBox Doc = new RichTextBox();
 
-            progress.Minimum = 0;
-            progress.Maximum = Constant.DocumentsNumber;
-            progress.Step = 1;
+            GlobalControls.progress.Minimum = 0;
+            GlobalControls.progress.Maximum = Constant.DocumentsNumber;
+            GlobalControls.progress.Step = 1;
 
             Slovar.LoadFile(Constant.PathToDictionary);
             for (int i = 0; i < Constant.DocumentsNumber; i++)
@@ -199,11 +138,11 @@ namespace nccgle_program
                     }
                 }
 
-                progress.PerformStep();
+                GlobalControls.progress.PerformStep();
                 Doc.Clear();
             }
 
-            progress.Value = 0;
+            GlobalControls.progress.Value = 0;
 
 
         }
