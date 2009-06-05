@@ -102,7 +102,7 @@ namespace nccgle_program
                 page += (i % 2 == 0) ? "<tr>" : "<tr bgcolor=#DFDFDF>";
 
                 page += "<th bgcolor=#ccffcc>";
-                page += (markDocsDX) ? ("<a title=" + ((i > 0) ? TermNames[i - 1] : "") + ">" + i.ToString() + "</a>") : i.ToString();
+                page += (markDocsDX) ? ("<a title=" + TermNames[i] + ">" + (i+1).ToString() + "</a>") : (i+1).ToString();
                 page += "</th>";
 
                 for (int j = 0; j < dy; j++)

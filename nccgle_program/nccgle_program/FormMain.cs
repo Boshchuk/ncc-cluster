@@ -23,6 +23,7 @@ namespace nccgle_program
         {
             InitializeComponent();
             comboBox1.Enabled = false;
+            DebugConsole.screen = textBox1;
             JustDoIt.progress = (ToolStripProgressBar)statusStrip.Items["toolStripProgressBar"];
             JustDoIt.log_bar = (ToolStripStatusLabel)statusStrip.Items["toolStripStatusLabel"];
 
