@@ -24,6 +24,7 @@ namespace nccgle_program
             InitializeComponent();
             comboBox1.Enabled = false;
             DebugConsole.screen = textBox1;
+            Render.SetOutput(resultBrowser);
             JustDoIt.progress = (ToolStripProgressBar)statusStrip.Items["toolStripProgressBar"];
             JustDoIt.log_bar = (ToolStripStatusLabel)statusStrip.Items["toolStripStatusLabel"];
 
@@ -57,19 +58,24 @@ namespace nccgle_program
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
-                    JustDoIt.RenderMatrix("Матрица D<br>Горизонталь - термины \\ вертикаль - документы", resultBrowser, D);
+                    D.Comment = "Матрица D<br>Горизонталь - термины \\ вертикаль - документы";
+                    Render.DoOne(D);
                     break;
                 case 1:
-                    JustDoIt.RenderMatrix("Матрица S", resultBrowser, S);
+                    S.Comment = "Матрица S";
+                    Render.DoOne(S);
                     break;
                 case 2:
-                    JustDoIt.RenderMatrix("Матрица S_shtrih", resultBrowser, S_Shtrih);
+                    S_Shtrih.Comment = "Матрица S_shtrih";
+                    Render.DoOne(S_Shtrih);
                     break;
                 case 3:
-                    JustDoIt.RenderMatrix("Матрица C", resultBrowser, C);
+                    C.Comment = "Матрица C";
+                    Render.DoOne(C);
                     break;
                 case 4:
-                    JustDoIt.RenderMatrix("Матрица C_shtrih", resultBrowser, C_Shtrih);
+                    C_Shtrih.Comment = "Матрица C_shtrih";
+                    Render.DoOne(C_Shtrih);
                     break;
                 
                 case 5:
