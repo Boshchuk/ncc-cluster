@@ -39,6 +39,7 @@ namespace RExpertone
             this.textBoxPeremen = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.buttonSet = new System.Windows.Forms.Button();
+            this.buttonRun = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -117,18 +118,29 @@ namespace RExpertone
             // 
             // buttonSet
             // 
-            this.buttonSet.Location = new System.Drawing.Point(355, 97);
+            this.buttonSet.Location = new System.Drawing.Point(250, 97);
             this.buttonSet.Name = "buttonSet";
-            this.buttonSet.Size = new System.Drawing.Size(35, 247);
+            this.buttonSet.Size = new System.Drawing.Size(35, 168);
             this.buttonSet.TabIndex = 9;
             this.buttonSet.Text = "set";
             this.buttonSet.UseVisualStyleBackColor = true;
+            this.buttonSet.Click += new System.EventHandler(this.buttonSet_Click);
+            // 
+            // buttonRun
+            // 
+            this.buttonRun.Location = new System.Drawing.Point(336, 171);
+            this.buttonRun.Name = "buttonRun";
+            this.buttonRun.Size = new System.Drawing.Size(124, 41);
+            this.buttonRun.TabIndex = 10;
+            this.buttonRun.Text = "Run --->";
+            this.buttonRun.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 590);
+            this.ClientSize = new System.Drawing.Size(1129, 560);
+            this.Controls.Add(this.buttonRun);
             this.Controls.Add(this.buttonSet);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxPeremen);
@@ -158,6 +170,7 @@ namespace RExpertone
         private System.Windows.Forms.TextBox textBoxPeremen;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonSet;
+        private System.Windows.Forms.Button buttonRun;
 
 
     }
