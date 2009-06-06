@@ -79,13 +79,13 @@ namespace nccgle_program
                     break;
                 
                 case 5:
-                    JustDoIt.RenderMatrix("Коэффициенты связи для документов", resultBrowser, Coefficients.koef_svyazi_i);
+                    //JustDoIt.RenderMatrix("Коэффициенты связи для документов", resultBrowser, Coefficients.koef_svyazi_i);
                     break;
                 case 6:
                     JustDoIt.RenderMatrix("Коэффициент связи общий", resultBrowser, Coefficients.koef_svyazi_obschiy);
                     break;
                 case 7:
-                    JustDoIt.RenderMatrix("Коэффициенты уникальности для документов", resultBrowser, Coefficients.koef_uniq_i);
+                    //JustDoIt.RenderMatrix("Коэффициенты уникальности для документов", resultBrowser, Coefficients.koef_uniq_i);
                     break;
 
                 case 8:
