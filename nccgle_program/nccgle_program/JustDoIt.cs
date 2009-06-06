@@ -121,8 +121,11 @@ namespace nccgle_program
             Slovar.LoadFile(Constant.PathToDictionary);
             for (int i = 0; i < Constant.DocumentsNumber; i++)
             {
-
-                Doc.LoadFile(Constant.PathToDocuments + (i + 1).ToString() + Constant.DocumentsFileExtension);
+                //это упростило мне дэбаг 
+                //когда  я понял, что просто изменить расширение не получитя , а нужно 
+                //действительно сохранить как rtf
+                string FileNameToOpen = Constant.PathToDocuments + (i + 1).ToString() + Constant.DocumentsFileExtension;
+                Doc.LoadFile(FileNameToOpen);
                 for (int j = 0; j < Constant.TermsNumber; j++)
                 {
                     string text = Slovar.Lines[j];
