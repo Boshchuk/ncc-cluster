@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nccgle_program", "nccgle_program.csproj", "{056D9846-B1E0-4F3B-B9F8-2FFE5A6C1846}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RExpertone", "..\RExpertone\RExpertone.csproj", "{C44DD001-03FF-46AA-AEDB-9CEA2149AE0B}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{056D9846-B1E0-4F3B-B9F8-2FFE5A6C1846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{056D9846-B1E0-4F3B-B9F8-2FFE5A6C1846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{056D9846-B1E0-4F3B-B9F8-2FFE5A6C1846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{056D9846-B1E0-4F3B-B9F8-2FFE5A6C1846}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C44DD001-03FF-46AA-AEDB-9CEA2149AE0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C44DD001-03FF-46AA-AEDB-9CEA2149AE0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C44DD001-03FF-46AA-AEDB-9CEA2149AE0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C44DD001-03FF-46AA-AEDB-9CEA2149AE0B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
