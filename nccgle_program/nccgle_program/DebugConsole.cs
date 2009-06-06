@@ -19,7 +19,7 @@ namespace nccgle_program
             else
                 MessageBox.Show("Не указана ссылка на объект для вывода");
         }
-
+       
         public static void Print(string text ,double message)
         {
             Print(text + " " + Math.Round(message, Constant.RoundSymbolsCountInRender).ToString());
@@ -28,6 +28,6 @@ namespace nccgle_program
         public static void Print(string text, int message)
         {
             Print(text+ " " +message.ToString());
-        }
+        }        
     }
 }
