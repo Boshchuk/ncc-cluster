@@ -272,6 +272,6 @@ namespace nccgle_program
                     this[i, j] = byWhat[i, j];
                 }
             }
-        }
+        }       
     }
 }
