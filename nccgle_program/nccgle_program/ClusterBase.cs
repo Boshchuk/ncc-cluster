@@ -61,7 +61,7 @@ namespace nccgle_program
                 item.num = kerr[i];
                 Tree.Add(item);
 
-                allDocs.Remove(kerr[i]); // убираем номера доков-центроидов из общего множества
+                //allDocs.Remove(kerr[i]); // убираем номера доков-центроидов из общего множества
             }
         }
         /// <summary>
@@ -113,8 +113,8 @@ namespace nccgle_program
                         if (d[doc_num, i] == 1) f++;
                     }
                     double left_part = f * coef.koef_uniq_j_shtrih[i];
-                    DebugConsole.Print("left_part",left_part);
-                    // левая часть посчитана.
+                    DebugConsole.Print("left_part", left_part);
+                    // левая часть посчитана
 
                     // считаем f_avg
                     int m = 0;
