@@ -92,6 +92,22 @@ namespace nccgle_program
                 MessageBox.Show("wb = null");
         }
 
+        public static void RenderTree(ClusterBase cb)
+        {
+            string page = "";
 
+            //int depth = 0; //todo: 
+            foreach (ClusterBase.Cluster item in cb.Tree)
+            {
+                page += "<p>" + item.num + " ";
+                for (int i = 0; i < item.g.DimX; i++)
+                {
+                    page += item.g[i].ToString();
+                }
+                page += "</p>";
+            }
+
+            GlobalControls.table.DocumentText = page;
+        }
     }
 }

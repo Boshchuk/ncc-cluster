@@ -9,8 +9,14 @@ namespace nccgle_program
         /// <summary>
         /// Элемент дерева кластеров (он же кластер)
         /// </summary>
-        public struct Cluster
+        public class Cluster
         {
+            public Cluster()
+            {
+                docs = new List<int>();
+                g = new Matrix(Constant.TermsNumber);
+                num = -1;
+            }
             /// <summary>
             /// Документ (номер документа), являющегося ядром кластера
             /// </summary>
@@ -53,11 +59,9 @@ namespace nccgle_program
             {
                 Cluster item = new Cluster();
                 item.num = kerr[i];
-                item.docs = new List<int>();
-                item.g = new Matrix(Constant.TermsNumber);
                 Tree.Add(item);
 
-                allDocs.Remove(kerr[i]); // убираем доки из общего множества
+                allDocs.Remove(kerr[i]); // убираем номера доков-центроидов из общего множества
             }
         }
         /// <summary>
@@ -95,12 +99,14 @@ namespace nccgle_program
 
         public void BuildCentroid(Matrix d, Matrix c_shtrih, ManyMatrixToShow coef)
         {
-            foreach (Cluster item in Tree) // смысл цикла: построить центроиды для каждого кластера
+            for (int t = 0; t < Tree.Count; t++) // смысл цикла: построить центроиды для каждого кластера
             {
-                DebugConsole.Print("Кластер:", item.num);
+                Cluster item = Tree[t];
+                DebugConsole.Print("Кластер:", item.num);                
+
                 for (int i = 0; i < Constant.TermsNumber; i++) // смысл цикла: сформировать g_i
                 {
-                    DebugConsole.Print("Элемент", i);
+                    //DebugConsole.Print("Элемент", i);
                     int f = 0; // количество вхождений i-го термина в документы кластера
                     foreach (int doc_num in item.docs)
                     {
@@ -111,23 +117,27 @@ namespace nccgle_program
                     // левая часть посчитана.
 
                     // считаем f_avg
-                    int m=0;
+                    int m = 0;
                     foreach (Cluster item_tmp in Tree)
                     {
                         foreach (int j in item_tmp.docs)
                         {
-                            if (d[j, i] == 1) m++;
-                            break;
+                            if (d[j, i] == 1)
+                            {
+                                m++;
+                                break;
+                            }
+                            
                         }
                     }
-                    double f_avg = (m != 0) ? f / m : 0;
-                    double right_part = f_avg * coef.koef_uniq_obschiy_shtrih * Constant.alpha;
-                    DebugConsole.Print("f_avg", f_avg);
+                    double f_avg = (m != 0) ? (f / m) : 0;
+                    double right_part = f_avg * coef.koef_uniq_obschiy_shtrih[0] * Constant.alpha;
+                    //DebugConsole.Print("f_avg", f_avg);
                     DebugConsole.Print("right_part", right_part);
 
-                    item.g[i] = left_part > right_part ? 1 : 0;                    
+                    item.g[i] = (left_part > right_part) ? 1 : 0;
                 }
-                
+
             }
         }
     }

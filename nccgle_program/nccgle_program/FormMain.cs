@@ -27,6 +27,7 @@ namespace nccgle_program
             GlobalControls.debugOutputScreen = textBox1;
             GlobalControls.progress = (ToolStripProgressBar)statusStrip.Items["toolStripProgressBar"];
             GlobalControls.log_bar = (ToolStripStatusLabel)statusStrip.Items["toolStripStatusLabel"];
+            GlobalControls.table = resultBrowser;
 
             D = new Matrix(Constant.DocumentsNumber, Constant.TermsNumber);
             S = new Matrix(Constant.DocumentsNumber, Constant.TermsNumber);
@@ -78,30 +79,13 @@ namespace nccgle_program
                     Render.DoOne(C_Shtrih);
                     break;
                 
-                case 5:
-                    //JustDoIt.RenderMatrix("Коэффициенты связи для документов", resultBrowser, Coefficients.koef_svyazi_i);
+                case 5:                    
+                    Render.AddToRenderList(Coefficients.body);
+                    Render.DoList();
                     break;
+
                 case 6:
-                    JustDoIt.RenderMatrix("Коэффициент связи общий", resultBrowser, Coefficients.koef_svyazi_obschiy);
-                    break;
-                case 7:
-                    //JustDoIt.RenderMatrix("Коэффициенты уникальности для документов", resultBrowser, Coefficients.koef_uniq_i);
-                    break;
-
-                case 8:
-                    JustDoIt.RenderMatrix("Коэффициент уникальности общий", resultBrowser, Coefficients.koef_uniq_obschiy);
-                    break;
-
-                case 9:
-                    JustDoIt.RenderMatrix("Число кластеров", resultBrowser, Coefficients.Nu_C);
-                    break;
-
-                case 10:
-                    JustDoIt.RenderMatrix("Число доков в кластере", resultBrowser, Coefficients.M_C);
-                    break;
-
-                case 11:
-                    JustDoIt.RenderTree(resultBrowser, FinalTree);
+                    Render.RenderTree(FinalTree);
                     break;
             }
             resultBrowser.Select();
