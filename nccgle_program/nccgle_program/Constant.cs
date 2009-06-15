@@ -11,8 +11,8 @@ namespace nccgle_program
         /// пытается, по тому что точно сказать никогда нельзя
         /// </summary>
         // Число TermsNumber < Documents number
-        public static int DocumentsNumber = 37;  //61;
-        public static int TermsNumber = 34; // 41
+        public static int DocumentsNumber = 61;  //61;
+        public static int TermsNumber = 41; // 41
         public static string PathToDictionary = "docs/slovar.rtf";
         public static string PathToDocuments = "docs/";
         public static string DocumentsFileExtension = ".rtf";
@@ -27,6 +27,6 @@ namespace nccgle_program
         /// </summary>
         public static int RoundSymbolsCountInRender = 4;
 
-        public static double alpha = 0.75;
+        public static double alpha = 0.89;
     }
 }

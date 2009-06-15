@@ -56,41 +56,6 @@ namespace nccgle_program
             return result;
         }
 
-        /// <summary>
-        /// Вывод единственного элемента
-        /// </summary>
-        /// <param name="message">Текстовое примечание</param>
-        /// <param name="table">Куда выводить</param>
-        /// <param name="element">Что выводить</param>
-        public static void RenderMatrix(string message, WebBrowser table, double element)
-        {
-            string page = "";
-            page += "<p>" + message + "</p>";
-            page += "<table border=1 width=100%>";
-            page += "<td align=center>" + element.ToString();
-            page += "</tr>";
-            page += "</table>";
-            table.DocumentText = page;
-        }
-
-        public static void RenderTree(WebBrowser table, ClusterBase cb)
-        {
-            string page = "";
-
-            //int depth = 0; //todo: 
-            foreach (ClusterBase.Cluster item in cb.Tree)
-            {
-                page += "<p>" + item.num + " ";
-                for (int i = 0; i < item.g.DimX; i++)
-                {
-                    page += item.g[i].ToString();
-                }
-                page += "</p>";
-            }
-
-            table.DocumentText = page;
-        }
-
         public static void FillTermsName()
         {            
             RichTextBox Slovar = new RichTextBox();
@@ -298,14 +263,14 @@ namespace nccgle_program
             ManyMatrixToShow ForReturn = new ManyMatrixToShow();
             ForReturn.koef_svyazi_i = koef_svyazi_i;
             ForReturn.koef_svyazi_j_shtrih = koef_svyazi_j_shtrih;
-            ForReturn.koef_svyazi_obschiy = koef_svyazi_obschiy;
-            ForReturn.koef_svyazi_obschiy_shtrih = koef_svyazi_obschiy_shtrih;
+            ForReturn.koef_svyazi_obschiy[0] = koef_svyazi_obschiy;
+            ForReturn.koef_svyazi_obschiy_shtrih[0] = koef_svyazi_obschiy_shtrih;
             ForReturn.koef_uniq_i = koef_uniq_i;
             ForReturn.koef_uniq_j_shtrih = koef_uniq_j_shtrih;
-            ForReturn.koef_uniq_obschiy = koef_uniq_obschiy;
-            ForReturn.koef_uniq_obschiy_shtrih = koef_uniq_obschiy_shtrih;
-            ForReturn.Nu_C = Nu_C;
-            ForReturn.M_C = M_C;
+            ForReturn.koef_uniq_obschiy[0] = koef_uniq_obschiy;
+            ForReturn.koef_uniq_obschiy_shtrih[0] = koef_uniq_obschiy_shtrih;
+            ForReturn.Nu_C[0] = Nu_C;
+            ForReturn.M_C[0] = M_C;
             ForReturn.p = p;
 
             return ForReturn;
@@ -316,7 +281,7 @@ namespace nccgle_program
             ClusterBase cb = new ClusterBase();
 
             // получаем список из ню_цэ индексов
-            List<int> tmp = coefSet.p.vSortAndGetIndexes((int)coefSet.Nu_C);
+            List<int> tmp = coefSet.p.vSortAndGetIndexes((int)coefSet.Nu_C[0]);
 
             cb.SetKernels(tmp); // создали Nu_C кластеров
             cb.SortDocs(c);
