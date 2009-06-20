@@ -70,21 +70,21 @@ namespace nccgle_program
         /// <param name="c"></param>
         public void SortDocs(Matrix c)
         {
-            foreach (int doc in allDocs) // для каждого дока из оставшихся делаем:
+            foreach (int doc in allDocs) // для каждого документа выполняем следующую операцию:
             {
                 double max = 0;
                 int resIndex = 0;
 
                 foreach (Cluster item in Tree) // для каждого кластера из дерева кластеров:
-                {       // с(номер дока_ядра, конкретный док)
-                    if (c[item.num, doc] >= max) 
+                {       // с(номер документа-ядра, конкретный документ)
+                    if (c[item.num, doc] >= max) // ищем документ с максимальным коэффициентом "уникальности", относительности документа-центроида
                     {
                         max = c[item.num, doc];
                         resIndex = item.num;
                     }
                 }
 
-                // здесь мы находим нужный кластер и вставляем в него док
+                // здесь мы находим нужный кластер и вставляем в него документ
                 foreach (Cluster item in Tree)
                 {
                     if (item.num == resIndex)
@@ -112,6 +112,7 @@ namespace nccgle_program
                     {
                         if (d[doc_num, i] == 1) f++;
                     }
+
                     double left_part = f * coef.koef_uniq_j_shtrih[i];
                     DebugConsole.Print("left_part", left_part);
                     // левая часть посчитана

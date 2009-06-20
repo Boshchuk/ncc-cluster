@@ -25,7 +25,7 @@ namespace nccgle_program
             bool markDocsDX = (dx == Constant.TermsNumber);
 
             string page = "";
-            page += "<p>" + m.Comment + "</p>";
+            page += "<p>" + m.Comment + @"</p>";
             page += "<table border=1 width=100%>";
 
             if (dy > 1)

@@ -27,6 +27,6 @@ namespace nccgle_program
         /// </summary>
         public static int RoundSymbolsCountInRender = 4;
 
-        public static double alpha = 0.89;
+        public static double alpha = 0.5;
     }
 }

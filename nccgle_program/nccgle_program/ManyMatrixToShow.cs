@@ -20,8 +20,9 @@ namespace nccgle_program
             /// <summary>
             /// частные коэфициенты уникальности (для документов)
             /// </summary> 
-            body.Add(new Matrix(Constant.DocumentsNumber));
-            body[0].Comment = "Частные коэфициенты уникальности";
+            Matrix m = new Matrix(Constant.DocumentsNumber);            
+            m.Comment = "Частные коэфициенты уникальности";
+            body.Add(m);
             /// <summary>
             /// общий коэфициент уникальности 
             /// </summary>
